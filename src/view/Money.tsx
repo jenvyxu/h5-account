@@ -3,6 +3,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 const TagsSection = styled.section`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
   background-color: #fff;
   padding: 12px 16px;
   >ol {
@@ -51,24 +56,24 @@ const NoteSection = styled.section`
 const CategorySection = styled.section`
   font-size: 24px;
   >ul {
-  display: flex;
-  background: #c4c4c4;
-    >li {
-      position: relative;
-      flex-basis: 50%;
-      padding: 16px 0;
-      text-align: center;
-      &.selected::after {
-        content: '';
-        display: block;
-        height: 3px;
-        background: #333;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
+    display: flex;
+    background: #c4c4c4;
+      >li {
+        position: relative;
+        flex-basis: 50%;
+        padding: 16px 0;
+        text-align: center;
+        &.selected::after {
+          content: '';
+          display: block;
+          height: 3px;
+          background: #333;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+        }
       }
-    }
    }
 `
 
@@ -129,10 +134,14 @@ const NumberPadSection = styled.section`
     }
   }
 `
+const MoneyLayout = styled(Layout)`
+  display: flex;
+  flex-direction: column;
+`
 
 const Money = () => {
   return (
-    <Layout>
+    <MoneyLayout>
       <TagsSection>
         <ol>
           <li>衣</li>
@@ -173,8 +182,7 @@ const Money = () => {
           <button>.</button>
         </div>
       </NumberPadSection>
-
-    </Layout>
+    </MoneyLayout>
   )
 }
 
