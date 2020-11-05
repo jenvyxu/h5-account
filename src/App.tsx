@@ -9,28 +9,35 @@ import Money from 'view/Money';
 import Statistics from 'view/Statistics';
 import Tags from 'view/Tags';
 import NoMatch from 'view/NoMatch';
+import styled from 'styled-components';
+
+const AppWrapper = styled.div`
+  color: #333;
+`
 
 function App() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/money">
-          <Money />
-        </Route>
-        <Route path="/statistics">
-          <Statistics />
-        </Route>
-        <Route path="/tags">
-          <Tags />
-        </Route>
-        <Route path="/" exact>
-          <Redirect to='/money' />
-        </Route>
-        <Route path="*">
-          <NoMatch />
-        </Route>
-      </Switch>
-    </Router>
+    <AppWrapper>
+      <Router>
+        <Switch>
+          <Route path="/money">
+            <Money />
+          </Route>
+          <Route path="/statistics">
+            <Statistics />
+          </Route>
+          <Route path="/tags">
+            <Tags />
+          </Route>
+          <Route path="/" exact>
+            <Redirect to='/money' />
+          </Route>
+          <Route path="*">
+            <NoMatch />
+          </Route>
+        </Switch>
+      </Router>
+    </AppWrapper>
   );
 }
 
