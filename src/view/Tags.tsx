@@ -42,13 +42,13 @@ const Button = styled.button`
 `
 
 const Tags = () => {
-  const {tags, setTags} = useTags()
+  const {tags} = useTags()
   return (
     <Layout>
       <TagList>
-        {tags.map(tag => <li key={tag}>
-          <Link to={'/tags/' + tag}>
-            <span className="on-line">{tag}</span>
+        {tags.map(tag => <li key={tag.id}>
+          <Link to={'/tags/' + tag.id}>
+            <span className="on-line">{tag.name}</span>
             <Icon name="arrow-right"/>
           </Link>
         </li>)}
