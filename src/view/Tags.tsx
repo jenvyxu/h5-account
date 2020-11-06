@@ -4,6 +4,7 @@ import {useTags} from '../useTags';
 import styled from 'styled-components';
 import Icon from '../components/Icon';
 import {Link} from 'react-router-dom';
+import { Button } from 'components/Button';
 
 const TagList = styled.ol`
   font-size: 16px;
@@ -31,16 +32,6 @@ const Space = styled.div`
   height: 16px;
 `
 
-const Button = styled.button`
-  font-size: 18px;
-  border: none;
-  padding: 8px 12px;
-  background: #767676;
-  color: #fff;
-  border-radius: 4px;
-
-`
-
 const Tags = () => {
   const {tags} = useTags()
   return (
@@ -58,7 +49,6 @@ const Tags = () => {
         <Space/>
         <Button>新增标签</Button>
       </Center>
-
     </Layout>
   )
 }
