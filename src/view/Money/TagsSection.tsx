@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
 import {useTags} from 'useTags';
-import {createId} from 'lib/cteateId';
 
 const Wrapper = styled.section`
   flex-grow: 1;
@@ -41,14 +40,9 @@ type Props = {
 }
 
 const TagsSection: React.FC<Props> = (props) => {
-  const {tags, setTags} = useTags()
+  const {tags, addTag} = useTags()
   const selectedIds = props.value
-  const onAddTag = () => {
-    const tagName = window.prompt('请输入标签')
-    if(tagName !== null) {
-      setTags([...tags ,{id: createId(), name: tagName}])
-    }
-  }
+
   const onToggleTag = (tagId: number) => {
     const index = selectedIds.indexOf(tagId)
     // 新增或者移除某个标签
@@ -68,7 +62,7 @@ const TagsSection: React.FC<Props> = (props) => {
               className={getClass(tag.id)}>{tag.name}</li>
         )}
       </ol>
-      <button onClick={onAddTag}>新增标签</button>
+      <button onClick={addTag}>新增标签</button>
     </Wrapper>
   )
 }
