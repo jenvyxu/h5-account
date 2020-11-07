@@ -27,9 +27,9 @@ type Params = {
   id: string
 }
 const Tag = () => {
-  const { id } = useParams<Params>()
-  const { findTag } = useTags()
-  const tag = findTag(parseInt(id))
+  const { id: idString } = useParams<Params>()
+  const { findTag, updateTag } = useTags()
+  const tag = findTag(parseInt(idString))
   return (
     <Layout>
       <Topbar>
@@ -38,7 +38,14 @@ const Tag = () => {
         <Icon />
       </Topbar>
       <InputWrapper>
-        <Input label="标签名" placeholder="标签名" type="text" value={tag.name}/>
+        <Input label="标签名"
+               placeholder="标签名"
+               type="text"
+               value={tag.name}
+               onChange={(e) => {
+                 updateTag(tag.id,{ name: e.target.value})
+               }}
+        />
       </InputWrapper>
       <Center>
         <Space />
