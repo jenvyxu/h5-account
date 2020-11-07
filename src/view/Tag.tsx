@@ -28,8 +28,32 @@ type Params = {
 }
 const Tag = () => {
   const { id: idString } = useParams<Params>()
-  const { findTag, updateTag } = useTags()
+  const { findTag, updateTag, deleteTag } = useTags()
   const tag = findTag(parseInt(idString))
+
+  const TagContent = (tag: {id: number, name: string}) => {
+    return (
+      <div>
+        <InputWrapper>
+          <Input label="标签名"
+                 placeholder="标签名"
+                 type="text"
+                 value={tag.name}
+                 onChange={(e) => {
+                   updateTag(tag.id,{ name: e.target.value})
+                 }}
+          />
+        </InputWrapper>
+        <Center>
+          <Space />
+          <Space />
+          <Space />
+          <Button onClick={()=>{deleteTag(tag.id)}}>删除标签</Button>
+        </Center>
+      </div>
+    )
+  }
+
   return (
     <Layout>
       <Topbar>
@@ -37,24 +61,11 @@ const Tag = () => {
         <span>编辑标签</span>
         <Icon />
       </Topbar>
-      <InputWrapper>
-        <Input label="标签名"
-               placeholder="标签名"
-               type="text"
-               value={tag.name}
-               onChange={(e) => {
-                 updateTag(tag.id,{ name: e.target.value})
-               }}
-        />
-      </InputWrapper>
-      <Center>
-        <Space />
-        <Space />
-        <Space />
-        <Button>删除标签</Button>
-      </Center>
-    </Layout>
+      {tag ? TagContent(tag) : <Center><span>标签不存在</span></Center>}
+  </Layout>
   )
+
+
 }
 
 export {Tag}
