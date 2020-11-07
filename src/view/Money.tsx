@@ -48,19 +48,22 @@ const Money = () => {
   }
 
   return (
-    <MoneyLayout>
-      <TagsSection value={selected.tagIds}
-                   onChange={tagIds => onChange({tagIds})}/>
-      <NoteSection value={selected.note}
-                   onChange={note => onChange({note})}/>
+    <MoneyLayout scrollTop={9999}>
+      <TagsSection
+        value={selected.tagIds}
+        onChange={tagIds => onChange({tagIds})}/>
+      <NoteSection
+        value={selected.note}
+        onChange={note => onChange({note})}/>
       <CategoryWrapper>
-       <CategorySection value={selected.category}
-                        onChange={category => onChange({category})}/>
+       <CategorySection
+         value={selected.category}
+         onChange={category => onChange({category})}/>
       </CategoryWrapper>
-
-      <NumberPadSection value={selected.amount}
-                        onChange={amount => onChange({amount})}
-                        onOk={submit} />
+      <NumberPadSection
+        value={selected.amount}
+        onChange={amount => onChange({amount})}
+        onOk={submit} />
     </MoneyLayout>
   )
 }
