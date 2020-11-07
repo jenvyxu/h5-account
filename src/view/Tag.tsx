@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {useTags} from 'useTags';
 import Layout from 'components/Layout';
 import Icon from 'components/Icon';
@@ -30,6 +30,7 @@ const Tag = () => {
   const { id: idString } = useParams<Params>()
   const { findTag, updateTag, deleteTag } = useTags()
   const tag = findTag(parseInt(idString))
+  const history = useHistory()
 
   const TagContent = (tag: {id: number, name: string}) => {
     return (
@@ -53,11 +54,13 @@ const Tag = () => {
       </div>
     )
   }
-
+  const onClickBack = () => {
+    history.goBack()
+  }
   return (
     <Layout>
       <Topbar>
-        <Icon name="arrow-left" />
+        <Icon name="arrow-left" onClick={onClickBack}/>
         <span>编辑标签</span>
         <Icon />
       </Topbar>
