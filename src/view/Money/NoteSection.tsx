@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import React, {ChangeEventHandler} from 'react';
-import {Input} from '../../components/Input';
+import {Input} from 'components/Input';
 
 const Wrapper = styled.section`
-  background: #f5f5f5;
-  padding: 14px 16px;
+  background: #fff;
+  padding: 10px 16px;
   font-size: 14px;
 `
 type Props = {
@@ -21,7 +21,7 @@ const NoteSection: React.FC<Props> = (props) => {
     <Wrapper>
       <Input type="text"
              label="备注"
-             placeholder="在这里添加备注"
+             placeholder="内容备注"
              value={note} onChange={onChange}/>
     </Wrapper>
   )

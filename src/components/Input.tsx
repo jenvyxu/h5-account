@@ -9,7 +9,7 @@ const Label = styled.label`
     white-space: nowrap;
   }
   >input {
-    height: 44px;
+    height: 32px;
     flex: 1;
     border: none;
     background: none;

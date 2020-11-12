@@ -35,6 +35,9 @@ const Wrapper = styled.section`
         font-size: 16px;
         font-family: inherit;
       }
+      &:last-child{
+        background: #f1c21a;
+      }
     }
   }
 `
