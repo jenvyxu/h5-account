@@ -4,28 +4,30 @@ import React from 'react';
 import Icon from './Icon';
 
 const NavWrapper = styled.nav`
-  box-shadow: 0 0 3px rgba(0,0,0.25);
   line-height: 24px;
-  background-color: #fff;
+  background-color: #f7f8f3;
   >ul {
     display:flex;
     >li {
       width: 33.33%;
       font-size: 14px;    
       >a {
-        padding: 4px 0;
+        padding: 8px 0 2px 0;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;      
+        justify-content: center;
+        color: #d7e0e2;
+        font-size: 12px;
         .icon {
           width: 24px;
           height: 24px;
+          fill: #d7e0e2
         }
         &.selected {
-          color: red;
+          color: #a3c6bf;
           .icon {
-            fill: red;
+            fill: #a3c6bf;
           }
         }
       }
