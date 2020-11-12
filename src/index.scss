@@ -1,5 +1,15 @@
+@font-face {
+  font-family: 'DeliusUnicase-Bold';
+  src: url("./assets/fonts/DeliusUnicase-Bold.ttf");
+
+}
+@font-face {
+  font-family: 'DeliusUnicase-Regular';
+  src: url("./assets/fonts/DeliusUnicase-Regular.ttf");
+}
 @import-normalize;
 @import 'helper.scss';
+
 *{margin: 0; padding: 0; box-sizing: border-box; }
 *::before,
 *::after {

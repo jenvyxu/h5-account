@@ -44,13 +44,15 @@ const NumberPadSection: React.FC<Props> = (props) => {
         <button>4</button>
         <button>5</button>
         <button>6</button>
-        <button>清空</button>
+        <button>+</button>
         <button>7</button>
         <button>8</button>
         <button>9</button>
-        <button className="ok">OK</button>
-        <button className="zero">0</button>
+        <button>-</button>
         <button>.</button>
+        <button className="zero">0</button>
+        <button>清零</button>
+        <button className="ok">完成</button>
       </div>
     </Wrapper>
   )

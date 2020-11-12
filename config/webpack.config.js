@@ -380,6 +380,12 @@ module.exports = function (webpackEnv) {
               ]
             },
             {
+              test: /\.(woff|woff2|eot|ttf|otf)$/i,
+              use: [
+                { loader: 'file-loader'}
+              ]
+            },
+            {
               test: [/\.avif$/],
               loader: require.resolve('url-loader'),
               options: {

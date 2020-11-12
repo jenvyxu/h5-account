@@ -3,56 +3,37 @@ import styled from 'styled-components';
 const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
+  background: #9bcabf;
+  padding: 16px;
   > .output {
     background: #fff;
-    font-size: 36px;
-    line-height: 72px;
+    font-size: 22px;
+    font-family: 'DeliusUnicase-Bold',serif;
+    font-weight: bold;
+    line-height: 40px;
     text-align: right;
     padding: 0 16px;
-    box-shadow: inset 0 -5px 5px -5px rgba(0,0,0,0.25),
-                inset 0 5px 5px -5px rgba(0,0,0,0.25);
+    border-radius: 8px;
+    border: 2px solid #000;
   }
   >.pad {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     >button {
-      font-size: 18px;
-      float: left;
-      width: 25%;
-      height: 64px;
-      border: none;
-      &.ok {
-        height: 128px;
-        float: right;
-      }
-      &.zero {
-        width: 50%;
-      }
-      &:nth-child(1) {
-        background: #f2f2f2;
-      }
-      &:nth-child(2),
-      &:nth-child(5) {
-        background: #e0e0e0;
-      }
-      &:nth-child(3),
-      &:nth-child(6),
-      &:nth-child(9) {
-        background: #d3d3d3;
-      }
+      font-family: 'DeliusUnicase-Regular',serif;
+      font-size: 24px;
+      width: 22%;
+      height: 40px;
+      border: 2px solid #000;
+      border-radius: 8px;
+      margin-top: 8px;
+      background: #fff;
       &:nth-child(4),
-      &:nth-child(7),
-      &:nth-child(10) {
-        background: #c1c1c1;
-      }
-      &:nth-child(8),
-      &:nth-child(11),
-      &:nth-child(13) {
-        background: #b8b8b8;
-      }
-      &:nth-child(12){
-        background: #9a9a9a;
-      }
-      &:nth-child(14) {
-        background: #a9a9a9;
+      &:nth-child(15),
+      &:nth-child(16){
+        font-size: 16px;
+        font-family: inherit;
       }
     }
   }
