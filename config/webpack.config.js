@@ -368,13 +368,14 @@ module.exports = function (webpackEnv) {
             // https://github.com/jshttp/mime-db
             {
               test: /\.svg$/,
+
               use: [
                 { loader: 'svg-sprite-loader', options: {} },
                 { loader: 'svgo-loader',
                   options: {
                     plugins: [
-                      {removeAttrs: {attrs: 'fill'}}
-                      ]
+                      // {removeAttrs: {attrs: 'fill'}}
+                    ],
                   }
                 }
               ]

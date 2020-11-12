@@ -3,15 +3,20 @@ import {createId} from 'lib/cteateId';
 import {useUpdate} from 'hooks/useUpdate';
 
 const useTags = () => {
-  const [tags, setTags] = useState<{ id: number, name: string }[]>([]);
+  const [tags, setTags] = useState<{ id: number, name: string, icon: string }[]>([]);
   useEffect(() => {
     let localTags = JSON.parse(window.localStorage.getItem('tags')|| '[]')
     if(localTags.length === 0 ) {
       localTags = [
-        { id: createId(), name: '衣'},
-        { id: createId(), name: '食'},
-        { id: createId(), name: '住'},
-        { id: createId(), name: '行'},
+        { id: createId(), name: '出行', icon: 'train'},
+        { id: createId(), name: '日常', icon: 'shop'},
+        { id: createId(), name: '购物', icon: 'shopping'},
+        { id: createId(), name: '娱乐', icon: 'game'},
+        { id: createId(), name: '聚会', icon: 'party'},
+        { id: createId(), name: '教育', icon: 'book'},
+        { id: createId(), name: '宠物', icon: 'pet'},
+        { id: createId(), name: '母婴', icon: 'babycar'},
+        { id: createId(), name: '水电', icon: 'electric'},
       ]
     }
     setTags(localTags)
@@ -32,7 +37,7 @@ const useTags = () => {
       return result;
   }
   const updateTag = (id: number, obj: {name: string}) => {
-    setTags(tags.map(tag => tag.id === id ? {id, name: obj.name} : tag));
+    setTags(tags.map(tag => tag.id === id ? {id, name: obj.name, icon: ''} : tag));
   }
   const deleteTag = (id: number) => {
     setTags(tags.filter(tag => tag.id !== id))
@@ -40,7 +45,7 @@ const useTags = () => {
   const addTag = () => {
     const tagName = window.prompt('请输入标签')
     if(tagName !== null) {
-      setTags([...tags ,{id: createId(), name: tagName}])
+      setTags([...tags ,{id: createId(), name: tagName, icon: ''}])
     }
   }
   const getName = (id: number) => {
