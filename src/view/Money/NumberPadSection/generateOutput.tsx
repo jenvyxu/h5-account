@@ -1,3 +1,5 @@
+import { CONSTANTS } from 'lib/constants';
+const math = require('mathjs');
 
 const generateOutput = (text: string, output: string) => {
   switch(text) {
@@ -13,20 +15,75 @@ const generateOutput = (text: string, output: string) => {
     case '9':
       if(output === '0') {
         return text;
+      } else if(/([+-])0$/.test(output)) {
+        return output.slice(0, -1) + text
       } else {
         return output + text;
       }
+    case '+':
+      if(/\.$/.test(output)) {
+        return output + '0' + text;
+      } else if(/\D$/.test(output)){
+        return output.slice(0, -1) + text
+      } else if(output === '0') {
+        return output
+      } else {
+        return output + text
+      }
+    case '-':
+      if(/\.$/.test(output)) {
+        return output + '0' + text;
+      } else if(/\D$/.test(output)){
+        return output.slice(0, -1) + text
+      } else if(output === '0') {
+        return output
+      } else {
+        return output + text
+      }
     case '.':
-      if(output.indexOf('.')>=0) {return output;}
-      return output + '.';
-    case '删除':
+      if(/(\.\d*|\D)$/.test(output)) {
+        return output;
+      } else {
+        return output + '.';
+      }
+    case CONSTANTS.delete:
       if(output.length > 1) {
         return output.slice(0, -1) || '';
       } else {
         return ''
       }
-    case '清空':
+    case CONSTANTS.clear:
       return '';
+    case '=':
+        console.log(output)
+        let strArr = output.split(/[+-]/);
+        let valueArr: number[] = []
+        let operator: number = 1
+        let sum:number = 0
+        for( let i=0; i<strArr.length; i++) {
+          if(strArr[i] === '') {
+            return
+          } else if(strArr[i] === '+') {
+            operator = 1
+          } else if (strArr[i] === '-') {
+            operator = -1
+          } else {
+            let num = parseFloat(strArr[i])
+            valueArr.push(num * operator)
+          }
+        }
+        sum = valueArr.reduce((total, val) => {
+          if(val > 0) {
+            console.log(val, '+');
+            return total.add(val)
+          } else {
+            console.log(val, '-');
+            return total.subtract(Math.abs(val))
+          }
+        }, math.chain(sum)).toString()
+      console.log(sum)
+      console.log(valueArr);
+      return sum
     default:
       return '';
   }

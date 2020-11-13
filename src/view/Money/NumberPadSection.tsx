@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Wrapper} from './NumberPadSection/Wrapper';
 import {generateOutput} from './NumberPadSection/generateOutput';
+import { CONSTANTS } from 'lib/constants';
 
 type Props ={
   value: number;
@@ -11,8 +12,8 @@ const NumberPadSection: React.FC<Props> = (props) => {
   const [output, _setOutput] = useState(props.value.toString())
   const setOutput = (output: string) => {
     let newOutput: string
-    if(output.length>16) {
-      newOutput = output.slice(0, 16)
+    if(output.length > 20) {
+      newOutput = output.slice(0, 20)
     } else if(output.length === 0 ) {
       newOutput = '0'
     } else {
@@ -24,12 +25,13 @@ const NumberPadSection: React.FC<Props> = (props) => {
   const ocClickButtonWrapper = (e: React.MouseEvent) => {
     const text= (e.target as HTMLButtonElement).textContent
     if(text === null) {return}
-    if(text === 'OK') {
+    if(text === '完成') {
       if(props.onOk){
         props.onOk()
       }
       return
     }
+    // @ts-ignore
     setOutput(generateOutput(text, output))
   }
   return (
@@ -40,7 +42,7 @@ const NumberPadSection: React.FC<Props> = (props) => {
         <button>1</button>
         <button>2</button>
         <button>3</button>
-        <button>删除</button>
+        <button>{CONSTANTS.delete}</button>
         <button>4</button>
         <button>5</button>
         <button>6</button>
@@ -51,8 +53,8 @@ const NumberPadSection: React.FC<Props> = (props) => {
         <button>-</button>
         <button>.</button>
         <button className="zero">0</button>
-        <button>清零</button>
-        <button className="ok">完成</button>
+        <button>{CONSTANTS.clear}</button>
+        <button className="ok">{/(\D)/.test(output)  ? '=' : CONSTANTS.complete}</button>
       </div>
     </Wrapper>
   )
