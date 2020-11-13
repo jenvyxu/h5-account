@@ -11,6 +11,7 @@ import Tags from 'view/Tags';
 import NoMatch from 'view/NoMatch';
 import styled from 'styled-components';
 import {Tag} from './view/Tag';
+import {AddTag} from './view/AddTag';
 
 const AppWrapper = styled.div`
   color: #333;
@@ -29,6 +30,9 @@ function App() {
           </Route>
           <Route exact path="/tags">
             <Tags />
+          </Route>
+          <Route exact path="/tags/add">
+            <AddTag />
           </Route>
           <Route exact path="/tags/:id">
             <Tag />

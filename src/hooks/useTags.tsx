@@ -42,10 +42,10 @@ const useTags = () => {
   const deleteTag = (id: number) => {
     setTags(tags.filter(tag => tag.id !== id))
   }
-  const addTag = () => {
-    const tagName = window.prompt('请输入标签')
-    if(tagName !== null) {
-      setTags([...tags ,{id: createId(), name: tagName, icon: ''}])
+  const addTag = (obj: { name: string, icon: string }) => {
+    const {name, icon} = obj
+    if(name !== '' && icon !== '') {
+      setTags([...tags ,{id: createId(), name, icon}])
     }
   }
   const getName = (id: number) => {

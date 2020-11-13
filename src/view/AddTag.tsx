@@ -3,6 +3,7 @@ import Icon from '../components/Icon';
 import React, {useState} from 'react';
 import {Input} from '../components/Input';
 import { useHistory } from 'react-router-dom';
+import {useTags} from '../hooks/useTags';
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -66,7 +67,9 @@ const IconWrapper = styled.div`
 
 const AddTag = () => {
   const {goBack} = useHistory();
-  const [selected, setSelected] = useState<string>('bag');
+  const [iconName, setIconName] = useState<string>('bag');
+  const [tagName, setTagName] = useState<string>('')
+  const {addTag} = useTags()
   const [tags] = useState([
     { icon: 'bag' }, { icon: 'babycar' }, { icon: 'bank' }, { icon: 'book' },
     { icon: 'bus' }, { icon: 'clothes' }, { icon: 'education' }, { icon: 'electric' },
@@ -79,21 +82,29 @@ const AddTag = () => {
     { icon: 'travel' }, { icon: 'wallet' }
   ])
   const onComplete = () => {
-    goBack()
+    if(tagName==='' || iconName==='') {
+      goBack()
+      return
+    } else {
+      addTag({name: tagName, icon: iconName})
+      goBack()
+    }
   }
   return (
     <Wrapper>
       <Header>
         <span>添加标签</span>
-        <button onClick={() => onComplete()}>完成</button>
+        <button onClick={() => onComplete()}>{tagName&&iconName ? '完成': '返回'}</button>
       </Header>
-      <Input label="标签名" placeholder="填写标签名"/>
+      <Input label="标签名" placeholder="填写标签名" onChange={
+        (e) => {setTagName(e.target.value)}
+      }/>
       <IconWrapper>
         <div>选择图标</div>
         <ul>
           { tags.map(tag => (
-            <li onClick={() => {setSelected(tag.icon)}}
-                className={ selected === tag.icon ? 'selected' : ''}>
+            <li onClick={() => {setIconName(tag.icon)}}
+                className={ iconName === tag.icon ? 'selected' : ''}>
               <Icon name={tag.icon} key={tag.icon} />
             </li>
           ))}

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import React from 'react';
 import {useTags} from 'hooks/useTags';
 import Icon from '../../components/Icon';
+import {Link} from 'react-router-dom';
 
 const Wrapper = styled.section`
   flex-grow: 1;
@@ -26,9 +27,7 @@ const Wrapper = styled.section`
       align-items: center;
       justify-content: center;
       font-size: 12px;
-      >span{
-         
-      }
+      text-align: center;
       >.icon {
         width: 40px;
         height: 40px;
@@ -58,7 +57,7 @@ type Props = {
 }
 
 const TagsSection: React.FC<Props> = (props) => {
-  const {tags, addTag} = useTags()
+  const {tags} = useTags()
   const selectedIds = props.value
 
   const onToggleTag = (tagId: number) => {
@@ -81,7 +80,7 @@ const TagsSection: React.FC<Props> = (props) => {
             <Icon name={tag.icon}/><span>{tag.name}</span></li>
         )}
       </ol>
-      <button onClick={addTag}>新增标签</button>
+      <Link to='/tags/add'>新增标签</Link>
     </Wrapper>
   )
 }
