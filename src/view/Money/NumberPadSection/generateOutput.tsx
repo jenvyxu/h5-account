@@ -55,34 +55,29 @@ const generateOutput = (text: string, output: string) => {
     case CONSTANTS.clear:
       return '';
     case '=':
-        console.log(output)
-        let strArr = output.split(/[+-]/);
-        let valueArr: number[] = []
-        let operator: number = 1
-        let sum:number = 0
-        for( let i=0; i<strArr.length; i++) {
-          if(strArr[i] === '') {
-            return
-          } else if(strArr[i] === '+') {
-            operator = 1
-          } else if (strArr[i] === '-') {
-            operator = -1
-          } else {
-            let num = parseFloat(strArr[i])
-            valueArr.push(num * operator)
-          }
+      let strArr = output.split(/(\+|-)/);
+      let valueArr: number[] = []
+      let operator: number = 1
+      let sum:number = 0
+      for( let i=0; i<strArr.length; i++) {
+        if(strArr[i] === '') {
+          return
+        } else if(strArr[i] === '+') {
+          operator = 1
+        } else if (strArr[i] === '-') {
+          operator = -1
+        } else {
+          let num = parseFloat(strArr[i])
+          valueArr.push(num * operator)
         }
-        sum = valueArr.reduce((total, val) => {
+      }
+      sum = valueArr.reduce((total, val) => {
           if(val > 0) {
-            console.log(val, '+');
             return total.add(val)
           } else {
-            console.log(val, '-');
             return total.subtract(Math.abs(val))
           }
         }, math.chain(sum)).toString()
-      console.log(sum)
-      console.log(valueArr);
       return sum
     default:
       return '';
