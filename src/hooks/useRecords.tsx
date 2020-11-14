@@ -23,16 +23,14 @@ const useRecords = () => {
 
   const addRecord = (newRecord: newRecordItem) => {
     if(newRecord.amount <= 0 ){
-      alert('请输入金额')
-      return false
+      return 'requireMoney'
     }
     if(newRecord.tagIds.length === 0) {
-      alert('请选择标签')
-      return false
+      return 'requireTag'
     }
     const record = {...newRecord, createAt: (new Date()).toISOString()}
     setRecords([...records, record])
-    return true
+    return 'complete'
   }
   return { records, setRecords, addRecord }
 }
