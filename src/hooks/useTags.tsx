@@ -37,7 +37,7 @@ const useTags = () => {
       return result;
   }
   const updateTag = (id: number, obj: {name: string}) => {
-    setTags(tags.map(tag => tag.id === id ? {id, name: obj.name, icon: ''} : tag));
+    setTags(tags.map(tag => tag.id === id ? Object.assign(tag, obj) : tag));
   }
   const deleteTag = (id: number) => {
     setTags(tags.filter(tag => tag.id !== id))
