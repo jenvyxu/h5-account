@@ -28,6 +28,7 @@ const NumberPadSection: React.FC<Props> = (props) => {
     if(text === '完成') {
       if(props.onOk){
         props.onOk()
+        _setOutput('0')
       }
       return
     }
