@@ -12,6 +12,4 @@
 
 [预览](https://jenvyxu.github.io/save-my-money/build/index.html)
 
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/home.png" alt="截图" width="200">
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/tags.png" alt="截图" width="200">
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/add.png" alt="截图" width="200">
+<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/home.png" alt="截图" width="200"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/tags.png" alt="截图" width="200"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/add.png" alt="截图" width="200">
