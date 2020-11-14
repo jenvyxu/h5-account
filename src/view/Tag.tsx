@@ -9,18 +9,32 @@ import {Input} from 'components/Input';
 import { Center } from 'components/Center';
 import { Space } from 'components/Space';
 
-const Topbar = styled.header`
+const Header = styled.header`
+  font-size: 16px;
   display: flex;
   align-items: center;
+  padding: 20px 16px;
+  background: #f8fbf5;
   justify-content: space-between;
-  line-height: 20px;
-  padding: 14px;
-  background: #fff;
+  >span {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  >button {
+    background: #a0e0cf;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+  }
  `
 const InputWrapper = styled.div`
   padding: 0 14px;
   background: #fff;
   margin-top: 8px;
+  input {
+    border-bottom: 1px solid #ccc;
+  }
 `
 
 type Params = {
@@ -49,7 +63,7 @@ const Tag = () => {
           <Space />
           <Space />
           <Space />
-          <Button onClick={()=>{deleteTag(tag.id)}}>删除标签</Button>
+          <Button onClick={()=>onDelete(tag.id)}>删除标签</Button>
         </Center>
       </div>
     )
@@ -57,18 +71,19 @@ const Tag = () => {
   const onClickBack = () => {
     history.goBack()
   }
+  const onDelete = (id:number) => {
+    deleteTag(id)
+    history.goBack()
+  }
   return (
     <Layout>
-      <Topbar>
-        <Icon name="arrow-left" onClick={onClickBack}/>
+      <Header>
         <span>编辑标签</span>
-        <Icon />
-      </Topbar>
+        <button onClick={onClickBack}>返回</button>
+      </Header>
       {tag ? TagContent(tag) : <Center><span>标签不存在</span></Center>}
   </Layout>
   )
-
-
 }
 
 export {Tag}

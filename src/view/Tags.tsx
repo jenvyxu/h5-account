@@ -4,8 +4,34 @@ import {useTags} from 'hooks/useTags';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
 import {Link} from 'react-router-dom';
-import { Center } from 'components/Center';
-import { Space } from 'components/Space';
+
+const TagsLayout = styled(Layout)`
+  >a {
+    position: absolute;
+    bottom: 64px;
+    right: 16px;
+    display: inline-block;
+    .icon {
+      vertical-align: top;
+      width: 48px;
+      height: 48px;
+      fill: #91cdc0;
+    }
+  }
+`
+
+const Header = styled.header`
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px;
+  background: #f8fbf5;
+  >span {
+    font-size: 24px;
+    font-weight: bold;
+  }
+`
 
 const TagList = styled.ol`
   font-size: 16px;
@@ -18,30 +44,42 @@ const TagList = styled.ol`
       display:flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px 12px 0;
+      padding: 10px 16px 10px 0;
+      >.icon {
+        fill: #666;
+      }
     }
   }
+`
+const Label = styled.span`
+  display: flex;
+  align-items: center;
+  >.icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+  }
+  >span {
+  
+  }
+
 `
 
 const Tags = () => {
   const {tags} = useTags()
   return (
-    <Layout>
+    <TagsLayout>
+      <Header><span>标签管理</span></Header>
       <TagList>
         {tags.map(tag => <li key={tag.id}>
           <Link to={'/tags/' + tag.id}>
-            <span className="on-line">{tag.name}</span>
-            <Icon name="arrow-right"/>
+            <Label><Icon name={tag.icon} /><span>{tag.name}</span></Label>
+            <Icon name="right"/>
           </Link>
         </li>)}
       </TagList>
-      <Center>
-        <Space/>
-        <Space/>
-        <Link to='tags/add'>新增标签</Link>
-      </Center>
-
-    </Layout>
+      <Link to='tags/add'><Icon name="add" /></Link>
+    </TagsLayout>
   )
 }
 
