@@ -40,6 +40,12 @@ const Nav = () => {
     <NavWrapper>
       <ul>
         <li>
+          <NavLink to="/home" exact activeClassName="selected">
+            <Icon name="home"/>
+            今天
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/tags" exact activeClassName="selected">
             <Icon name="tag"/>
             标签

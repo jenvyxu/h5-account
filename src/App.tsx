@@ -12,6 +12,7 @@ import NoMatch from 'view/NoMatch';
 import styled from 'styled-components';
 import {Tag} from './view/Tag';
 import {AddTag} from './view/AddTag';
+import {Home} from './view/Home'
 
 const AppWrapper = styled.div`
   color: #333;
@@ -22,6 +23,9 @@ function App() {
     <AppWrapper>
       <Router>
         <Switch>
+          <Route exact path="/home">
+            <Home />
+          </Route>
           <Route exact path="/money">
             <Money />
           </Route>
@@ -38,7 +42,7 @@ function App() {
             <Tag />
           </Route>
           <Route exact path="/">
-            <Redirect to='/money' />
+            <Redirect to='/home' />
           </Route>
           <Route path="*">
             <NoMatch />
