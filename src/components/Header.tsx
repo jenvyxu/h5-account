@@ -19,26 +19,23 @@ const Wrapper = styled.header`
     height: 1em;
     width: 1em;
   }
-  .left {
-    position: absolute;
-    left: 20px;
-  }
+  .left,
   .right {
-    position: absolute;
-    right: 20px;
+    flex: 1;
   }
 `
 
 type Props = {
   title?: string,
   left?: any,
-  right?: any
+  right?: any,
+  className?: string
 }
 
 const Header: React.FC<Props> = (props) => {
-  const { left, title, right } = props
+  const { left, title, right, className } = props
   return (
-    <Wrapper className="clearfix">
+    <Wrapper className={className} >
       { left && <span className="left">{left}</span> }
       { title && <span className="title">{title}</span> }
       { right && <span className="right">{right}</span> }

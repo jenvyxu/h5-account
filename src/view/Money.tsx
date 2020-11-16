@@ -8,13 +8,31 @@ import {NumberPadSection} from './Money/NumberPadSection';
 import {TagsSection} from './Money/TagsSection';
 import {animated, useTransition} from 'react-spring';
 import {Toast} from '../components/Toast';
-
+import {Header} from '../components/Header';
+import Icon from '../components/Icon';
+import { useHistory } from 'react-router-dom';
 
 const AnimatedToast = animated(Toast);
 
 const MoneyLayout = styled(Layout)`
   display: flex;
   flex-direction: column;
+`
+
+const HeaderSection = styled(Header)`
+  .title {
+    flex: 1;
+    text-align: left;
+    margin-left: 10px;
+  }
+  .left{
+    display: flex;
+    flex: 0;
+  }
+  .right {
+    flex: 0 0 auto;
+  }
+
 `
 
 type Category = '-' | '+'
@@ -76,6 +94,7 @@ const Money = () => {
     }, duration)
   }
 
+  const history = useHistory()
   return (
     <MoneyLayout scrollTop={9999}>
       {
@@ -86,9 +105,13 @@ const Money = () => {
             style={props}
             type={type} />)
       }
-      <CategorySection
-        value={selected.category}
-        onChange={category => onChange({category})}/>
+      <HeaderSection title="记一笔帐"
+              left={<Icon name="back" onClick={history.goBack}/>}
+              right={
+                <CategorySection
+                value={selected.category}
+                onChange={category => onChange({category})}/>
+              }/>
       <TagsSection
         value={selected.tagIds}
         onChange={tagIds => onChange({tagIds})}/>
