@@ -51,12 +51,12 @@ const Nav = () => {
             标签
           </NavLink>
         </li>
-        <li>
-          <NavLink to="/money" activeClassName="selected">
-            <Icon name="money"/>
-            记账
-          </NavLink>
-        </li>
+        {/*<li>*/}
+        {/*  <NavLink to="/money" activeClassName="selected">*/}
+        {/*    <Icon name="money"/>*/}
+        {/*    记账*/}
+        {/*  </NavLink>*/}
+        {/*</li>*/}
         <li>
           <NavLink to="/statistics" activeClassName="selected">
             <Icon name="chart" />
