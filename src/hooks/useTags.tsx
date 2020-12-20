@@ -45,6 +45,7 @@ const useTags = () => {
         localTags = defaultTags.concat(tags)
       }
       setTags(localTags)
+      window.localStorage.setItem('tags', JSON.stringify(tags))
     })
   }, []) // 组件挂载时执行
 
@@ -78,6 +79,7 @@ const useTags = () => {
     if(name !== '' && icon !== '') {
       // setTags([...tags ,{id: createId(), name, icon}])
       const res = await httpAddTag('add', obj)
+      defaultTags.push(obj)
       return res
     }
   }
@@ -101,5 +103,3 @@ const useTags = () => {
 
 export {useTags};
 export type { Tag };
-
-
