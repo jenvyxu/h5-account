@@ -1,10 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styled from 'styled-components';
-import {createDateArray} from '../../lib/createDateArray';
 
 const echarts = require('echarts')
+
 const Wrapper = styled.div`
- 
 `
 
 const ChartWrapper = styled.div`
@@ -14,36 +13,44 @@ const ChartWrapper = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
+  font-size: 14px;
   >button {
-    margin: 0 10px;  
+    margin: 0 6px;
+    padding: 2px 6px;
+    color: #a0cac6;
+    border: 1px solid #a0cac6;
+    border-radius: 4px;
+    outline: none;
+    background: #fff;
   }
 `
 
-const createValueArr = () => Array(7).fill(0).map((val, index) => {
-  return Math.ceil(Math.random()*100)
-})
-
 type Props = {
-  data: {[key: string]: { income: number, cost: number }}
+  data: {[key: string]: { income: number, cost: number }},
+  next: () => void,
+  prev: () => void,
+  current: () => void,
 }
 
 const Chart:React.FC<Props> = (props) => {
   const chartRef = useRef(null)
-  const [dateIndex, setDateIndex] = useState(0)
-  const [dataX, setDataX] = useState(createDateArray(0))
+  const { data, next, prev, current } = props
 
-  const { data } = props
-  const xAxisData:string[] = []
-  const incomeData:number[] = []
-  const costData:number[] = []
-  for(let key in data) {
-    xAxisData.push(key.slice(5))
-    incomeData.push(data[key].income)
-    costData.push(data[key].cost)
-  }
-  xAxisData.reverse()
-  incomeData.reverse()
-  costData.reverse()
+  const chartData = useMemo(() =>{
+    let xDataArr = []
+    let incomeDataArr = []
+    let costDataArray = []
+      for(let key in data) {
+        xDataArr.push(key.slice(5))
+        incomeDataArr.push(data[key].income)
+        costDataArray.push(data[key].cost)
+      }
+      return {
+        xAxisData: xDataArr.reverse(),
+        incomeData: incomeDataArr.reverse(),
+        costData: costDataArray.reverse()
+      }
+  }, [data])
 
   useEffect(() =>{
     const myChart = echarts.init(chartRef.current);
@@ -59,7 +66,7 @@ const Chart:React.FC<Props> = (props) => {
       xAxis: {
         name: '',
         type: 'category',
-        data: xAxisData,
+        data: chartData.xAxisData,
         axisLabel: {
           inside: false,
           rotate: 45
@@ -75,12 +82,12 @@ const Chart:React.FC<Props> = (props) => {
       },
       series: [{
         name:'支出',
-        data: costData,
+        data: chartData.costData,
         type: 'line'
       },
       {
         name: '收入',
-        data: incomeData,
+        data: chartData.incomeData,
         type: 'line'
       }]
     };
@@ -91,37 +98,18 @@ const Chart:React.FC<Props> = (props) => {
     const myChart = echarts.init(chartRef.current);
     myChart.setOption({
       xAxis: {
-        data: xAxisData,
+        data: chartData.xAxisData,
       },
     });
-
-  }, [xAxisData])
-
-  const goForward = () => {
-    setDateIndex(dateIndex + 1)
-    setDataX(createDateArray(dateIndex))
-    console.log(1);
-    console.log(dateIndex);
-    console.log(createDateArray(dateIndex));
-  }
-
-  const goBack = () => {
-    setDateIndex(dateIndex -1)
-    setDataX(createDateArray(dateIndex))
-  }
-
-  const goCurrent = () => {
-    setDateIndex(0)
-    setDataX(createDateArray(dateIndex))
-  }
+  }, [chartData.xAxisData])
 
   return (
     <Wrapper>
       <ChartWrapper ref={chartRef} />
       <ButtonWrapper>
-        <button onClick={() => goForward()}>前进</button>
-        <button onClick={() => goCurrent()}>现在</button>
-        <button onClick={() => goBack()}>后退</button>
+        <button onClick={() => prev()}>往前7天</button>
+        <button onClick={() => current()}>现在</button>
+        <button onClick={() => next()}>往后7天</button>
       </ButtonWrapper>
     </Wrapper>
   )
