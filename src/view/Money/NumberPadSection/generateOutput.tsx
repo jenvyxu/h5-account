@@ -1,5 +1,5 @@
 import { CONSTANTS } from 'lib/constants';
-const math = require('mathjs');
+import {calcFloat} from 'lib/calcFloat';
 
 const generateOutput = (text: string, output: string) => {
   switch(text) {
@@ -58,7 +58,7 @@ const generateOutput = (text: string, output: string) => {
       let strArr = output.split(/(\+|-)/);
       let valueArr: number[] = []
       let operator: number = 1
-      let sum:number = 0
+      let sum = ''
       for( let i=0; i<strArr.length; i++) {
         if(strArr[i] === '') {
           return
@@ -72,12 +72,8 @@ const generateOutput = (text: string, output: string) => {
         }
       }
       sum = valueArr.reduce((total, val) => {
-          if(val > 0) {
-            return total.add(val)
-          } else {
-            return total.subtract(Math.abs(val))
-          }
-        }, math.chain(sum)).toString()
+          return calcFloat(total, val)
+        }, '0')
       return sum
     default:
       return '';
