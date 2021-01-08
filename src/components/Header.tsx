@@ -23,14 +23,18 @@ const Wrapper = styled.header`
   .right {
     flex: 1;
   }
+  .right {
+    text-align: right;
+  }
 `
 
 type Props = {
   title?: string,
   left?: any,
   right?: any,
-  className?: string
+  className?: string,
 }
+
 
 const Header: React.FC<Props> = (props) => {
   const { left, title, right, className } = props
