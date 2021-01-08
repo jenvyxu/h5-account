@@ -17,6 +17,7 @@
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
+    "axios": "^0.21.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.0",
     "babel-loader": "8.1.0",
@@ -107,6 +108,7 @@
   },
   "devDependencies": {
     "@types/classnames": "2.2.6",
+    "@types/echarts": "^4.9.0",
     "@types/mathjs": "^6.0.7",
     "@types/react-router-dom": "^5.1.6",
     "@types/webpack-env": "1.15.1",
