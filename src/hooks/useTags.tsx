@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react';
-import {createId} from 'lib/cteateId';
 import {useUpdate} from 'hooks/useUpdate';
 import {httpAddTag, httpGetTag} from '../http';
 
@@ -10,48 +9,60 @@ type Tag = {
   category: 'cost'|'income'
 }
 
-const defaultTags: Array<Tag> = [
-  { id: createId(), name: '房租', icon: 'fangzu', category: 'cost' },
-  { id: createId(), name: '水电', icon: 'shuidian', category: 'cost' },
-  { id: createId(), name: '居家', icon: 'shop', category: 'cost' },
-  { id: createId(), name: '交通', icon: 'train', category: 'cost' },
-  { id: createId(), name: '学习', icon: 'book', category: 'cost' },
-  { id: createId(), name: '日用', icon: 'riyong', category: 'cost' },
-  { id: createId(), name: '餐饮', icon: 'canyin', category: 'cost' },
-  { id: createId(), name: '购物', icon: 'shopping', category: 'cost' },
-  { id: createId(), name: '娱乐', icon: 'youxi', category: 'cost' },
-  { id: createId(), name: '旅游', icon: 'lvyou', category: 'cost' },
-  { id: createId(), name: '宠物', icon: 'chongwu', category: 'cost' },
-
-  { id: createId(), name: '工资', icon: 'gongji', category: 'income' },
-  { id: createId(), name: '报销', icon: 'baoxiao', category: 'income' },
-  { id: createId(), name: '补助', icon: 'buzhu', category: 'income' },
-  { id: createId(), name: '红包', icon: 'hongbao', category: 'income' },
-  { id: createId(), name: '分红', icon: 'fenhong', category: 'income' },
-  { id: createId(), name: '奖金', icon: 'jiangjin', category: 'income' },
-  { id: createId(), name: '借款', icon: 'jiekuan', category: 'income' },
-]
-
-
-
 const useTags = () => {
   const [tags, setTags] = useState<Tag[]>([]);
+  let [currentId, setCurrentId] = useState(0)
 
+  let id = 0
+  const createId = () => {
+    id += 1
+    return id
+  }
+
+  const defaultTags: Array<Tag> = [
+    { id: 1, name: '房租', icon: 'fangzu', category: 'cost' },
+    { id: 2, name: '水电', icon: 'shuidian', category: 'cost' },
+    { id: 3, name: '居家', icon: 'shop', category: 'cost' },
+    { id: 4, name: '交通', icon: 'train', category: 'cost' },
+    { id: 5, name: '学习', icon: 'book', category: 'cost' },
+    { id: 6, name: '日用', icon: 'riyong', category: 'cost' },
+    { id: 7, name: '餐饮', icon: 'canyin', category: 'cost' },
+    { id: 8, name: '购物', icon: 'shopping', category: 'cost' },
+    { id: 9, name: '娱乐', icon: 'youxi', category: 'cost' },
+    { id: 10, name: '旅游', icon: 'lvyou', category: 'cost' },
+    { id: 11, name: '宠物', icon: 'chongwu', category: 'cost' },
+    { id: 12, name: '工资', icon: 'gongji', category: 'income' },
+    { id: 13, name: '报销', icon: 'baoxiao', category: 'income' },
+    { id: 14, name: '补助', icon: 'buzhu', category: 'income' },
+    { id: 15, name: '红包', icon: 'hongbao', category: 'income' },
+    { id: 16, name: '分红', icon: 'fenhong', category: 'income' },
+    { id: 17, name: '奖金', icon: 'jiangjin', category: 'income' },
+    { id: 18, name: '借款', icon: 'jiekuan', category: 'income' },
+  ]
+
+  // 挂载组件是获取标签
   useEffect(() => {
-    // let localTags = JSON.parse(window.localStorage.getItem('tags')|| '[]')
     let localTags: Tag[] = []
-    httpGetTag().then((tags) => {
-      if(localTags.length === 0 ) {
-        localTags = defaultTags.concat(tags)
-      }
+    httpGetTag().then(({tagList, recentlyId}) => {
+      localTags = defaultTags.concat(tagList)
       setTags(localTags)
-      window.localStorage.setItem('tags', JSON.stringify(tags))
+      setCurrentId(recentlyId || defaultTags.length)
     })
-  }, []) // 组件挂载时执行
+  }, [])
 
   useUpdate(() => {
     window.localStorage.setItem('tags', JSON.stringify(tags))
   }, tags)
+
+  const addTag = async (obj: { name: string, icon: string, category: 'income'|'cost'}) => {
+    const {name, icon} = obj
+    console.log('length', tags.length);
+    if(name !== '' && icon !== '') {
+      const res = await httpAddTag('add', {...obj, id: createId(), currentId: currentId + 1 })
+      defaultTags.push({...obj, id: createId()})
+      return res
+    }
+  }
 
   const findTag = (id: number) => tags.filter(tag => tag.id === id)[0]
 
@@ -74,20 +85,11 @@ const useTags = () => {
     setTags(tags.filter(tag => tag.id !== id))
   }
 
-  const addTag = async (obj: { name: string, icon: string, category: 'income'|'cost', id: number }) => {
-    const {name, icon} = obj
-    if(name !== '' && icon !== '') {
-      // setTags([...tags ,{id: createId(), name, icon}])
-      const res = await httpAddTag('add', obj)
-      defaultTags.push(obj)
-      return res
-    }
-  }
-
   const getName = (id: number) => {
     const tag = tags.filter(t => t.id === id)[0]
     return tag ? tag.name : ''
   }
+
   const getTags = (category: 'income'|'cost') => {
     if(category === 'income') {
       return tags.filter(tag => tag.category === 'income')
@@ -97,7 +99,6 @@ const useTags = () => {
       return tags
     }
   }
-
   return { tags, getTags, getName, setTags, findTag, findTagIndex, updateTag, deleteTag, addTag };
 }
 

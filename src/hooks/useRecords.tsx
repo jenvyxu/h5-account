@@ -1,10 +1,11 @@
 import {useEffect, useState} from 'react';
 import {useUpdate} from './useUpdate';
+import {httpAddRecord} from '../http';
 
 export type RecordItem = {
-  tagIds: number[];
+  tagId: number;
   note: string;
-  category: '+' | '-';
+  category: 'income' | 'cost';
   amount: number;
   createAt: string;
 }
@@ -21,16 +22,20 @@ const useRecords = () => {
     window.localStorage.setItem('records', JSON.stringify(records))
   }, records)
 
-  const addRecord = (newRecord: newRecordItem) => {
+  const addRecord = async (newRecord: newRecordItem) => {
     if(newRecord.amount <= 0 ){
       return 'requireMoney'
     }
-    if(newRecord.tagIds.length === 0) {
+    if(newRecord.tagId === -1) {
       return 'requireTag'
     }
     const record = {...newRecord, createAt: (new Date()).toISOString()}
-    setRecords([...records, record])
-    return 'complete'
+    // setRecords([...records, record])
+    console.log(record);
+    const res = await httpAddRecord('add', record)
+    if(res.statusText === 'OK' ) {
+      return 'complete'
+    }
   }
   return { records, setRecords, addRecord }
 }
