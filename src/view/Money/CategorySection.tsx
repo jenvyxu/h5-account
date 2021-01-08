@@ -16,14 +16,14 @@ const Wrapper = styled.ul`
     }
 `
 type Props = {
-  value: '-' | '+';
-  onChange: (value: '-' | '+') => void
+  value: 'income' | 'cost';
+  onChange: (value: 'income' | 'cost') => void
 }
 
 const CategorySection: React.FC<Props> = (props) => {
-  const categoryMap = { '+': '收入', '-': '支出'}
+  const categoryMap = { 'income': '收入', 'cost': '支出'}
   type Keys = keyof typeof categoryMap
-  const [categoryList] = useState<Keys[]>(['-', '+'])
+  const [categoryList] = useState<Keys[]>(['income', 'cost'])
   const category = props.value
   return (
     <Wrapper>

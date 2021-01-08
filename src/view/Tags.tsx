@@ -4,6 +4,7 @@ import {useTags} from 'hooks/useTags';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
 import {Link} from 'react-router-dom';
+import { Header } from 'components/Header';
 
 const TagsLayout = styled(Layout)`
   >a {
@@ -17,19 +18,6 @@ const TagsLayout = styled(Layout)`
       height: 48px;
       fill: #91cdc0;
     }
-  }
-`
-
-const Header = styled.header`
-  font-size: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 16px;
-  background: #f8fbf5;
-  >span {
-    font-size: 24px;
-    font-weight: bold;
   }
 `
 
@@ -59,17 +47,13 @@ const Label = styled.span`
     height: 28px;
     margin-right: 8px;
   }
-  >span {
-  
-  }
-
 `
 
 const Tags = () => {
   const {tags} = useTags()
   return (
     <TagsLayout>
-      <Header><span>标签管理</span></Header>
+      <Header title="标签管理" />
       <TagList>
         {tags.map(tag => <li key={tag.id}>
           <Link to={'/tags/' + tag.id}>

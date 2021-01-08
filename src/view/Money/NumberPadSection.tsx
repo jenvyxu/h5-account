@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Wrapper} from './NumberPadSection/Wrapper';
 import {generateOutput} from './NumberPadSection/generateOutput';
 import { CONSTANTS } from 'lib/constants';
@@ -35,6 +35,23 @@ const NumberPadSection: React.FC<Props> = (props) => {
     // @ts-ignore
     setOutput(generateOutput(text, output))
   }
+
+  useEffect(() => {
+    // calcFloat(123, -100.2938); // 0.497
+    // calcFloat(0, 0) // 913.916
+    // calcFloat(0, 283.937)
+    // calcFloat(-123.9273, 1826)
+    // calcFloat(0.283,182.283)
+    // calcFloat(-100.837, -34.45283)
+    // calcFloat(-1255.640000644, 34.45283)
+    // calcFloat(-110, 100.2937)
+    // calcFloat(-0.23, 0.23)
+    // calcFloat(-12.23001, 12.23001)
+    // calcFloat(-10.78, -12.1002)
+    // calcFloat(10.01, -12.12345)
+
+  }, [])
+
   return (
     <Wrapper>
       <div className="output">{output}</div>

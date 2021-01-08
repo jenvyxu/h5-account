@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useTags} from 'hooks/useTags';
-import Icon from '../../components/Icon';
+import Icon from 'components/Icon';
 import {Link} from 'react-router-dom';
 
 const Wrapper = styled.section`
@@ -27,7 +27,7 @@ const Wrapper = styled.section`
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      font-size: 12px;
+      font-size: 14px;
       text-align: center;
       >.icon {
         width: 40px;
@@ -61,34 +61,42 @@ const Wrapper = styled.section`
   }
 `
 type Props = {
-  value: number[];
-  onChange: (selected: number[]) => void;
+  value: number;
+  category: 'income' | 'cost';
+  onChange: (selected: number) => void;
 }
 
 const TagsSection: React.FC<Props> = (props) => {
-  const {tags} = useTags()
-  const selectedIds = props.value
+  let {tags} = useTags()
+  const selectedId = props.value
+  useEffect(() => {
+
+  },[props.category])
 
   const onToggleTag = (tagId: number) => {
-    const index = selectedIds.indexOf(tagId)
-    // 新增或者移除某个标签
-    if(index>=0) {
-      props.onChange(selectedIds.filter(id => id!==tagId))
+    if(selectedId === tagId) {
+      props.onChange(-1)
     } else {
-      props.onChange([...selectedIds, tagId])
+      props.onChange(tagId)
     }
   }
-  const getClass = (tagId: number) => selectedIds.indexOf(tagId) >=0 ? 'selected' : ''
+  const getClass = (tagId: number) => selectedId === tagId ? 'selected' : ''
   return (
     <Wrapper>
       <ol>
-        {tags.map(tag =>
+        {tags.filter(tag => tag.category === props.category).map(tag =>
           <li key={tag.id}
               onClick={()=> {onToggleTag(tag.id)}}
               className={getClass(tag.id)}>
             <Icon name={tag.icon}/><span>{tag.name}</span></li>
         )}
-        <li><Link to='/tags/add'><Icon name="add"/></Link></li>
+        <li>
+          <Link to={{
+            pathname: '/tags/add',
+            search: props.category || 'cost'
+          }}>
+          <Icon name="add"/></Link>
+        </li>
       </ol>
     </Wrapper>
   )
