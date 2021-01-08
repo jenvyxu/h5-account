@@ -1,6 +1,5 @@
 import Layout from 'components/Layout';
-import React, {createRef, useEffect, useRef, useState} from 'react';
-import {CategorySection} from './Money/CategorySection';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {RecordItem, useRecords} from 'hooks/useRecords';
 import {useTags} from 'hooks/useTags';
@@ -11,24 +10,6 @@ import {Chart} from './Statistics/Chart';
 import {PieChart} from './Statistics/PieChart';
 import {httpGetStatistic} from '../http';
 
-const CategoryWrapper = styled.div`
-    background: #fff;
-`
-
-const Item = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 18px;
-  line-height: 20px;
-  padding: 10px 20px;
-  background: #fff;
-  >.note {
-    margin-right: auto;
-    margin-left: 16px;
-    color: #999;
-  }
-`
 
 const CategoryTab = styled.ul`
   display: flex;
@@ -91,10 +72,12 @@ const tabs = [
   }
   ]
 
+type TagList = { id: number; name: string; icon: string; category: "cost" | "income"; }[]
+
 const Statistics = () => {
   const [category, setCategory] = useState<'income'|'expense'>('expense')
   const {records} = useRecords()
-  const {getName} = useTags()
+  const {getName, getTags} = useTags()
   const [selected, setSelected] = useState('total')
   const selectedRecords = records.filter(r => r.category === category)
   const hash: {[K: string ]: RecordItem[]} = {}
@@ -106,31 +89,34 @@ const Statistics = () => {
     hash[key].push(r)
   })
 
-  const array = Object.entries(hash).sort((a, b)=> {
-    if(a[0] > b[0]) return -1
-    if(a[0] < b[0]) return 1
-    if(a[0] === b[0]) return 0
-    return 0
-  })
-
-  const onTabChange = (e: React.MouseEvent) => {
-    console.log(e);
-  }
-
   const [chartData, setChartData] = useState<{[key: string]: { income: number, cost: number }}>({})
   // 获取图表数据
-
   const [current, setCurrent] = useState(new Date())
   const [count] = useState(7)
 
+  const [incomeList, setIncomeList] = useState([])
+  const [costList, setCostList] = useState([])
+
   useEffect(() => {
-    getStatistic(count, current)
+    getTotalaStatistic(count, current)
+    getMonthlyIncomeStatistic('cost')
+    getMonthlyIncomeStatistic('income')
   }, [])
 
   const [loading, setLoading] = useState(false)
-  const getStatistic = (count: number, current: Date) => {
-    httpGetStatistic({ count, current: current.toISOString() })
+  // 获取最近七天的统计数据
+  const getTotalaStatistic = (count: number, current: Date) => {
+    const currentDate = new Date(current.toISOString().slice(0, 10)) // new Date('2020-12-20')
+    // 获取开始和结束时间
+    let date = currentDate.getDate()
+    currentDate.setDate(date + 1)
+    const end = currentDate.toISOString()
+    currentDate.setDate(date - count + 1)
+    const start = currentDate.toISOString()
+
+    httpGetStatistic({ start, end, type: 'total'})
       .then(({data})=> {
+        if(!data) return
         let tempData:{[key: string]: { income: number, cost: number }} = {}
         // 创建一个新的Date对象, 防止修改current对象
         const currentDate = new Date(current.toISOString())
@@ -156,33 +142,51 @@ const Statistics = () => {
         setLoading(false)
       })
   }
+  // 获取月度支出统计
+  const getMonthlyIncomeStatistic = (type: 'income'|'cost') => {
+    const dateString = new Date().toISOString().slice(0, 7) // 2020-12
+    const today = new Date(dateString)
+    const start = today.toISOString()
+    today.setMonth(today.getMonth() + 1)
+    const end = today.toISOString()
+    httpGetStatistic({start, end, type}).then(({data})=> {
+      if(type === 'income') {
+        setIncomeList(data)
+      } else {
+        setCostList(data)
+      }
+    })
+  }
+
   // 获取前七天数据
   const getPrevData = () => {
     if(loading) return
     current.setDate(current.getDate() - count)
-    getStatistic(count, current)
+    getTotalaStatistic(count, current)
   }
   // 获取后七天数据
   const getNextData = () => {
     if(loading) return
     current.setDate(current.getDate() + count)
-    getStatistic(count, current)
+    getTotalaStatistic(count, current)
   }
   // 解决setCurrent异步变化的问题
   useEffect(() => {
-    getStatistic(count, current)
+    getTotalaStatistic(count, current)
   }, [current])
   // 获取当前七天数据
   const getCurrentData = () => {
     if(loading) return
     setCurrent(new Date())
-    // getStatistic(count, current)
   }
+  // 对标签进行处理
+  const tag = () => {
 
+  }
   return (
     <Layout>
       <Header title={current.toISOString().slice(0, 7)} />
-      <CategoryTab onClick={(e) => onTabChange(e)}>
+      <CategoryTab>
         {
           tabs.map((tab) =>
             <li onClick={() => {setSelected(tab.icon)}} key={tab.icon}
@@ -195,12 +199,12 @@ const Statistics = () => {
           )
         }
       </CategoryTab>
-      <Chart data={chartData} prev={getPrevData} next={getNextData} current={getCurrentData} />
-      {/*<div>*/}
-      {/*  <span>本月共支出: ￥1000</span>*/}
-      {/*  <span>本月共收入: $10980</span>*/}
-      {/*</div>*/}
-      {/*<PieChart />*/}
+      {
+        selected === 'total' ?
+          <Chart data={chartData} prev={getPrevData} next={getNextData} current={getCurrentData} /> :
+          <PieChart type={selected === 'cost' ? 'cost' : 'income'}
+                    list={selected === 'cost' ? costList : incomeList} />
+      }
     </Layout>
   )
 }
