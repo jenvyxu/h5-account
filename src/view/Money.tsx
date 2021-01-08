@@ -14,11 +14,6 @@ import { useHistory } from 'react-router-dom';
 
 const AnimatedToast = animated(Toast);
 
-const MoneyLayout = styled(Layout)`
-  display: flex;
-  flex-direction: column;
-`
-
 const HeaderSection = styled(Header)`
   .title {
     flex: 1;
@@ -32,26 +27,24 @@ const HeaderSection = styled(Header)`
   .right {
     flex: 0 0 auto;
   }
-
 `
 
-type Category = '-' | '+'
+type Category = 'cost' | 'income'
 
 const defaultFormData = {
-  tagIds: [] as number[],
+  tagId: 0,
   note: '',
-  category: '-' as Category,
+  category: 'cost' as Category,
   amount: 0
 }
 
 const Money = () => {
   const [selected, setSelected] = useState({
-    tagIds: [] as number[],
+    tagId: 0,
     note: '',
-    category: '-' as Category,
+    category: 'cost' as Category,
     amount: 0
   })
-
 
   const [visible, setVisible] = useState(false)
   const transitions = useTransition(visible, null, {
@@ -71,17 +64,25 @@ const Money = () => {
     })
   }
 
-  const submit = () => {
-    if(addRecord(selected) === 'requireMoney') {
-      showTip('请输入金额', 'warn')
-    } else if(addRecord(selected) === 'requireTag') {
-      showTip('请选择标签', 'warn')
-    } else if(addRecord(selected) === 'complete') {
-      showTip('记账成功')
-      setTimeout(() => {
-        setVisible(false)
-      }, 1000)
-      setSelected(defaultFormData)
+  const submit = async () => {
+    const res = await addRecord(selected)
+    switch (res) {
+      case 'requireMoney':
+        showTip('请输入金额', 'warn');
+        break;
+      case 'requireTag':
+        showTip('请选择标签', 'warn');
+        break;
+      case 'complete':
+        showTip('记账成功');
+        setTimeout(() => {
+          setVisible(false)
+        }, 1000);
+        setSelected(defaultFormData);
+        break;
+      default:
+        showTip('网络出错', 'warn')
+        break;
     }
   }
 
@@ -96,7 +97,7 @@ const Money = () => {
 
   const history = useHistory()
   return (
-    <MoneyLayout scrollTop={9999}>
+    <Layout>
       {
         transitions.map(({ item, key, props }) =>
           item && <AnimatedToast
@@ -113,8 +114,9 @@ const Money = () => {
                 onChange={category => onChange({category})}/>
               }/>
       <TagsSection
-        value={selected.tagIds}
-        onChange={tagIds => onChange({tagIds})}/>
+        value={selected.tagId}
+        category={selected.category}
+        onChange={tagId => onChange({tagId})}/>
       <NoteSection
         value={selected.note}
         onChange={note => onChange({note})}/>
@@ -122,7 +124,7 @@ const Money = () => {
         value={selected.amount}
         onChange={amount => onChange({amount})}
         onOk={submit} />
-    </MoneyLayout>
+    </Layout>
   )
 }
 
