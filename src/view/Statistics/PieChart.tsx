@@ -1,54 +1,119 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
+import Icon from 'components/Icon';
 const echarts = require('echarts')
 
-const Chart = styled.div`
-  height: 400px;
+const Title = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #9dccc2;
+  font-size: 14px;
+  > .total {
+    font-size: 28px;
+    margin: 6px 0;
+    font-weight: bold;
+  }
+  > .count {
+    background: #f9faf5;
+    padding: 6px 16px;
+    color: #aaa;
+    border-radius: 2px;
+  }
 `
 
-const PieChart: React.FC = (props) => {
+const ItemWrapper = styled.ul`
+  margin-bottom: 20px;
+  .total {
+    font-size: 12px;
+    color: #aaa;
+    margin-left: 4px;
+  }
 
+`
+
+const BarWrapper = styled.div`
+  flex: 1;
+  font-size: 14px;
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+
+const NumberWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+`
+
+const Item = styled.li`
+  display: flex;
+  padding: 16px;
+  background: #f9faf5;
+
+  > .icon{
+    font-size: 36px;
+  }
+`
+
+const Bar = styled.div`
+  height: 10px;
+  margin-top: 6px;
+  > div{
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    background: #9dccc2 ;
+  }
+`
+
+const Chart = styled.div`
+  height: 360px;
+`
+
+type Props = {
+  type: 'cost' | 'income',
+  list: {name: string, icon: string, total: number, percent: string}[]
+}
+
+const PieChart: React.FC<Props> = (props) => {
+  const {type, list} = props
   const chartRef = useRef(null)
 
   useEffect(() => {
-
     const option = {
       tooltip: {
         trigger: 'item',
         formatter: '{a} <br/>{b}: {c} ({d}%)'
       },
-      legend: {
-        orient: 'vertical',
-        left: 10,
-        data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+      label: {
+        show: true,
+        position: 'outside'
       },
       series: [
         {
-          name: '访问来源',
           type: 'pie',
-          radius: ['50%', '70%'],
+          radius: ['25%', '50%'],
           avoidLabelOverlap: false,
           label: {
-            show: false,
-            position: 'center'
+            show: true,
+            position: 'outside'
           },
           emphasis: {
             label: {
               show: true,
-              fontSize: '30',
+              fontSize: '20',
               fontWeight: 'bold'
             }
           },
           labelLine: {
-            show: false
+            show: true
           },
-          data: [
-            {value: 335, name: '直接访问'},
-            {value: 310, name: '邮件营销'},
-            {value: 234, name: '联盟广告'},
-            {value: 135, name: '视频广告'},
-            {value: 1548, name: '搜索引擎'}
-          ]
+          data: list.map((item: {name: string, total: number}) => ({
+            name: item.name,
+            value: item.total
+          })),
         }
       ]
     };
@@ -58,9 +123,29 @@ const PieChart: React.FC = (props) => {
 
   return (
     <div >
-      <div><span>共支出</span><span>￥22327</span>
-      <span>共15条支出目录</span></div>
+      <Title>
+        <span className="label">{type=== 'cost' ? '共支出' : '共收入'}</span>
+        <span className="total">￥{102}</span>
+        <span className="count">共{list.length}条{type==='cost'?'支出':'收入'}目录</span>
+      </Title>
       <Chart ref={chartRef} />
+      <ItemWrapper>
+        {list.map((item, index) => (
+          <Item key={index}>
+            <Icon name={item.icon} />
+            <BarWrapper>
+              <div>
+                <span>{item.name}</span>
+                <span className='total'>{type=== 'cost' ? '支出' : '收入'}{item.total}</span>
+              </div>
+              <Bar>
+                <div style={{width: item.percent}}></div>
+              </Bar>
+            </BarWrapper>
+            <NumberWrapper>{item.percent}</NumberWrapper>
+          </Item>          
+        ))}
+      </ItemWrapper>
     </div>
   )
 }
