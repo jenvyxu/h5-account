@@ -175,25 +175,25 @@ const tagsCategory = [
 ]
 
 
-const AddTag = () => {
+const AddTag:React.FC = (props) => {
   const {goBack} = useHistory();
+  const his = useHistory()
   const [selectedIcon, setSelectedIcon] = useState<string>('electric');
   const [tagName, setTagName] = useState<string>('')
   const {addTag} = useTags()
-  const { search } = useLocation()
+  const location = useLocation()
 
   const onConfirm = async () => {
     if(tagName==='') return
-    let category = search.slice(1) as 'cost'|'income'
     const res = await addTag({
       name: tagName,
       icon: selectedIcon,
-      category,
+      category: location.state as 'income'|'cost',
     })
-    if (res && res.status === 200) {
-      goBack()
+    if (res === 'success') {
+      his.push('/money', 'cost')
     } else {
-
+      console.log('fail')
     }
   }
   return (
