@@ -68,9 +68,8 @@ const tabs = [
   },
   {
     name: '收入分析',
-    icon:'piggy-bank'
-  }
-  ]
+    icon: 'income'
+  }]
 
 type TagList = { id: number; name: string; icon: string; category: "cost" | "income"; }[]
 
