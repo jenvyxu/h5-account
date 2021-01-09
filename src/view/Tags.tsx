@@ -3,7 +3,7 @@ import React from 'react';
 import {useTags} from 'hooks/useTags';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import { Header } from 'components/Header';
 
 const TagsLayout = styled(Layout)`
@@ -51,6 +51,8 @@ const Label = styled.span`
 
 const Tags = () => {
   const {tags} = useTags()
+  const location= useLocation()
+  console.log('location', location)
   return (
     <TagsLayout>
       <Header title="标签管理" />

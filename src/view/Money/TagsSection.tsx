@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React, {useEffect} from 'react';
 import {useTags} from 'hooks/useTags';
 import Icon from 'components/Icon';
-import {Link} from 'react-router-dom';
+import {Link, useLocation, useHistory} from 'react-router-dom';
 
 const Wrapper = styled.section`
   flex-grow: 1;
@@ -69,6 +69,7 @@ type Props = {
 const TagsSection: React.FC<Props> = (props) => {
   let {tags} = useTags()
   const selectedId = props.value
+  
   useEffect(() => {
 
   },[props.category])
@@ -93,7 +94,7 @@ const TagsSection: React.FC<Props> = (props) => {
         <li>
           <Link to={{
             pathname: '/tags/add',
-            search: props.category || 'cost'
+            state: props.category || 'cost'
           }}>
           <Icon name="add"/></Link>
         </li>

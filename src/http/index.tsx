@@ -1,34 +1,22 @@
 import axios from 'axios';
+import type {Tag} from '../hooks/useTags'
 
 // 使用unicloud空间
 const host = 'https://fd9b10f6-6863-4898-962b-cdd165d2cdfb.bspapp.com'
 
-const httpAddTag = async (action: string, data: {name: string, icon: string, id: number, currentId: number}) => {
-  return await axios.post(host + '/http/tag/' + action, data)
+// 新增标签
+const httpAddTag = async (
+    action: string, 
+    data: { name: string, icon: string, id: number, category: string }
+  ): Promise<{tagList: Tag[], success: boolean}> => {
+  const {data: res} = await axios.post(host + '/http/tag/' + action, data)
+  return res
 }
 
-type TagData = {
-  tagList: {
-    id: number,
-    name: string,
-    icon: string,
-    category: 'cost'|'income'
-  }[],
-  recentlyId: number
-}
-
-const httpGetTag: () => Promise<TagData>  = async () => {
-  const {data} =  await axios.get(host + '/http/tag/getTagList')
-  let tagList
-  if(data.tagList) {
-    tagList = data.tagList.map((tag: {id:number, name:string, icon: string} ) => {
-      const { id, name, icon } = tag
-      return { id, name, icon }
-    })
-  } else {
-    tagList = []
-  }
-  return {tagList, recentlyId: data.currentId}
+// 获取标签列表
+const httpGetTag = async (): Promise<{tagList: Tag[], success: boolean}> => {
+  const {data: res} = await axios.get(host + '/http/tag/getTagList')
+  return res
 }
 
 const deleteTag = () => {
