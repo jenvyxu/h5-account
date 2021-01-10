@@ -12,8 +12,8 @@ import {Header} from '../components/Header';
 import Icon from '../components/Icon';
 import {useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
-import type {StoreState} from '../redux/reducer';
-import {toggleCategory} from '../redux/action';
+import type {Category} from '../redux/reducers/category';
+import type {TagList} from '../redux/reducers/tagList'
 
 const AnimatedToast = animated(Toast);
 
@@ -31,9 +31,6 @@ const HeaderSection = styled(Header)`
     flex: 0 0 auto;
   }
 `
-
-type Category = 'cost' | 'income'
-
 const initialFormData = {
   tagId: 0,
   note: '',
@@ -42,10 +39,10 @@ const initialFormData = {
 }
 type Props = {
   category: Category,
-  toggleCategory: (category: Category) => void
+  tagList: TagList,
 }
 
-const Money: React.FC<Props> = ({category, toggleCategory}) => {
+const Money: React.FC<Props> = ({category, tagList}) => {
   const [formData, setFormData] = useState({
     tagId: 0,
     note: '',
@@ -114,13 +111,12 @@ const Money: React.FC<Props> = ({category, toggleCategory}) => {
       <HeaderSection title="记一笔帐"
               left={<Icon name="back" onClick={() => history.goBack}/>}
               right={
-                <CategorySection
-                  value={category}
-                  onChange={category => toggleCategory(category)}/>
+                <CategorySection />
               }/>
       <TagsSection
         value={formData.tagId}
         category={category}
+        tagList={tagList}
         onChange={tagId => onChange({tagId})}/>
       <NoteSection
         value={formData.note}
@@ -133,7 +129,9 @@ const Money: React.FC<Props> = ({category, toggleCategory}) => {
   )
 }
 
-const mapStatetoProps = (state: StoreState) => {
-  return state
-}
-export default connect(mapStatetoProps, {toggleCategory})(Money);
+const mapStatetoProps = (state: {
+  tagList: TagList,
+  category: Category
+}) => state
+
+export default connect(mapStatetoProps)(Money);

@@ -5,7 +5,9 @@ import {Input} from '../components/Input';
 import { useHistory, useLocation } from 'react-router-dom';
 import {useTags} from '../hooks/useTags';
 import {Header} from '../components/Header';
-// import {createId} from 'lib/cteateId';
+import {connect} from 'react-redux';
+import {addTag} from '../redux/actions'
+import type {Tag} from '../redux/reducers/tagList'
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -173,28 +175,36 @@ const tagsCategory = [
     ]
   }
 ]
+type Props = {
+  addTag: (tag: Tag) => void
+}
 
-
-const AddTag:React.FC = (props) => {
+const AddTag:React.FC<Props> = ({addTag}) => {
   const {goBack} = useHistory();
   const his = useHistory()
   const [selectedIcon, setSelectedIcon] = useState<string>('electric');
   const [tagName, setTagName] = useState<string>('')
-  const {addTag} = useTags()
+  // const {addTag} = useTags()
   const location = useLocation()
 
   const onConfirm = async () => {
     if(tagName==='') return
-    const res = await addTag({
-      name: tagName,
-      icon: selectedIcon,
-      category: location.state as 'income'|'cost',
+    // const res = await addTag({
+    //   name: tagName,
+    //   icon: selectedIcon,
+    //   category: location.state as 'income'|'cost',
+    // })
+    // if (res === 'success') {
+    //   his.push('/money', 'cost')
+    // } else {
+    //   console.log('fail')
+    // }
+    addTag({
+      name: '得瑟得瑟',
+      id: 11111,
+      icon: 'swim',
+      category: 'cost'
     })
-    if (res === 'success') {
-      his.push('/money', 'cost')
-    } else {
-      console.log('fail')
-    }
   }
   return (
     <Wrapper>
@@ -231,4 +241,5 @@ const AddTag:React.FC = (props) => {
     </Wrapper>
   )
 }
-export {AddTag}
+
+export default connect(null, {addTag})(AddTag)

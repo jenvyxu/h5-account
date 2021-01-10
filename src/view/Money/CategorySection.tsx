@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
+import {toggleCategory} from '../../redux/actions';
+import type {Category} from '../../redux/reducers/category';
+import type {TagList} from '../../redux/reducers/tagList'
 
 const Wrapper = styled.ul`
   display: flex;
@@ -17,25 +20,34 @@ const Wrapper = styled.ul`
     }
 `
 type Props = {
-  value: 'income' | 'cost';
-  onChange: (value: 'income' | 'cost') => void,
+  category: Category,
+  toggleCategory: (category: 'income'|'cost') => void
 }
 
-const CategorySection: React.FC<Props> = ({value, onChange}) => {
+const CategorySection: React.FC<Props> = ({category, toggleCategory}) => {
   const categoryMap = { 'income': '收入', 'cost': '支出'}
   type Keys = keyof typeof categoryMap
   const [categoryList] = useState<Keys[]>(['income', 'cost'])
-  const category = value
+
   return (
     <Wrapper>
       {categoryList.map(c =>
         <li className={category === c ? 'selected' : ''}
             key={c}
-            onClick={()=>{onChange(c)}}
+            onClick={()=>{toggleCategory(c)}}
         >{categoryMap[c]}</li>
       )}
     </Wrapper>
   )
 }
 
-export default connect(null)(CategorySection)
+const mapStatetoProps = (state: {
+  category: Category,
+  tagList: TagList
+}) => {
+  return {
+    category: state.category
+  }
+}
+
+export default connect(mapStatetoProps, { toggleCategory })(CategorySection)

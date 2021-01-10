@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import React, {useEffect} from 'react';
 import {useTags} from 'hooks/useTags';
 import Icon from 'components/Icon';
-import {Link, useLocation, useHistory} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import type {TagList} from '../../redux/reducers/tagList'
 
 const Wrapper = styled.section`
   flex-grow: 1;
@@ -64,10 +65,11 @@ type Props = {
   value: number;
   category: 'income' | 'cost';
   onChange: (selected: number) => void;
+  tagList: TagList
 }
 
-const TagsSection: React.FC<Props> = ({value, category, onChange}) => {
-  const {tags} = useTags()
+const TagsSection: React.FC<Props> = ({value, category, onChange, tagList}) => {
+  // const {tags} = useTags()
   const getClass = (tagId: number) => value === tagId ? 'selected' : ''
   const onToggleTag = (tagId: number) => {
     if(value === tagId) {
@@ -80,7 +82,7 @@ const TagsSection: React.FC<Props> = ({value, category, onChange}) => {
   return (
     <Wrapper>
       <ol>
-        {tags.filter(tag => tag.category === category).map(tag =>
+        {tagList.filter(tag => tag.category === category).map(tag =>
           <li key={tag.id}
               onClick={()=> {onToggleTag(tag.id)}}
               className={getClass(tag.id)}>

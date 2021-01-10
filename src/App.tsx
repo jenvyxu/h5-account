@@ -11,7 +11,7 @@ import Tags from 'view/Tags';
 import NoMatch from 'view/NoMatch';
 import styled from 'styled-components';
 import {Tag} from './view/Tag';
-import {AddTag} from './view/AddTag';
+import AddTag from './view/AddTag';
 import {Home} from './view/Home'
 
 const AppWrapper = styled.div`
