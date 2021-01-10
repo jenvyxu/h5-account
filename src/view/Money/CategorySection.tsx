@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
 
 const Wrapper = styled.ul`
   display: flex;
@@ -17,24 +18,24 @@ const Wrapper = styled.ul`
 `
 type Props = {
   value: 'income' | 'cost';
-  onChange: (value: 'income' | 'cost') => void
+  onChange: (value: 'income' | 'cost') => void,
 }
 
-const CategorySection: React.FC<Props> = (props) => {
+const CategorySection: React.FC<Props> = ({value, onChange}) => {
   const categoryMap = { 'income': '收入', 'cost': '支出'}
   type Keys = keyof typeof categoryMap
   const [categoryList] = useState<Keys[]>(['income', 'cost'])
-  const category = props.value
+  const category = value
   return (
     <Wrapper>
       {categoryList.map(c =>
         <li className={category === c ? 'selected' : ''}
             key={c}
-            onClick={()=>{props.onChange(c)}}
+            onClick={()=>{onChange(c)}}
         >{categoryMap[c]}</li>
       )}
     </Wrapper>
   )
 }
 
-export { CategorySection }
+export default connect(null)(CategorySection)

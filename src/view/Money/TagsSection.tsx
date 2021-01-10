@@ -66,26 +66,21 @@ type Props = {
   onChange: (selected: number) => void;
 }
 
-const TagsSection: React.FC<Props> = (props) => {
-  let {tags} = useTags()
-  const selectedId = props.value
-  
-  useEffect(() => {
-
-  },[props.category])
-
+const TagsSection: React.FC<Props> = ({value, category, onChange}) => {
+  const {tags} = useTags()
+  const getClass = (tagId: number) => value === tagId ? 'selected' : ''
   const onToggleTag = (tagId: number) => {
-    if(selectedId === tagId) {
-      props.onChange(-1)
+    if(value === tagId) {
+      onChange(-1)
     } else {
-      props.onChange(tagId)
+      onChange(tagId)
     }
   }
-  const getClass = (tagId: number) => selectedId === tagId ? 'selected' : ''
+  
   return (
     <Wrapper>
       <ol>
-        {tags.filter(tag => tag.category === props.category).map(tag =>
+        {tags.filter(tag => tag.category === category).map(tag =>
           <li key={tag.id}
               onClick={()=> {onToggleTag(tag.id)}}
               className={getClass(tag.id)}>
@@ -94,7 +89,7 @@ const TagsSection: React.FC<Props> = (props) => {
         <li>
           <Link to={{
             pathname: '/tags/add',
-            state: props.category || 'cost'
+            state: category || 'cost'
           }}>
           <Icon name="add"/></Link>
         </li>

@@ -2,7 +2,7 @@ import Layout from 'components/Layout';
 import { useRecords } from 'hooks/useRecords';
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import {CategorySection} from './Money/CategorySection';
+import CategorySection from './Money/CategorySection';
 import {NoteSection} from './Money/NoteSection';
 import {NumberPadSection} from './Money/NumberPadSection';
 import {TagsSection} from './Money/TagsSection';
@@ -10,7 +10,10 @@ import {animated, useTransition} from 'react-spring';
 import {Toast} from '../components/Toast';
 import {Header} from '../components/Header';
 import Icon from '../components/Icon';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
+import {connect} from 'react-redux';
+import type {StoreState} from '../redux/reducer';
+import {toggleCategory} from '../redux/action';
 
 const AnimatedToast = animated(Toast);
 
@@ -31,21 +34,24 @@ const HeaderSection = styled(Header)`
 
 type Category = 'cost' | 'income'
 
-const defaultFormData = {
+const initialFormData = {
   tagId: 0,
   note: '',
   category: 'cost' as Category,
   amount: 0
 }
+type Props = {
+  category: Category,
+  toggleCategory: (category: Category) => void
+}
 
-const Money = () => {
-  const [selected, setSelected] = useState({
+const Money: React.FC<Props> = ({category, toggleCategory}) => {
+  const [formData, setFormData] = useState({
     tagId: 0,
     note: '',
-    category: 'cost' as Category,
     amount: 0
   })
-
+  const history = useHistory()
   const [visible, setVisible] = useState(false)
   const transitions = useTransition(visible, null, {
     from: { opacity: 0 },
@@ -54,18 +60,18 @@ const Money = () => {
   })
   const [msg, setMsg] = useState('')
   const [type, setType] = useState('tip')
-
   const {addRecord} = useRecords()
-  type Selected = typeof selected
+  type Selected = typeof formData
+
   const onChange = (obj: Partial<Selected>) => {
-    setSelected({
-      ...selected,
+    setFormData({
+      ...formData,
       ...obj
     })
   }
-
-  const submit = async () => {
-    const res = await addRecord(selected)
+  // 保存记账信息
+  const saveRecord = async () => {
+    const res = await addRecord({...formData, category})
     switch (res) {
       case 'requireMoney':
         showTip('请输入金额', 'warn');
@@ -78,14 +84,14 @@ const Money = () => {
         setTimeout(() => {
           setVisible(false)
         }, 1000);
-        setSelected(defaultFormData);
+        setFormData(initialFormData);
         break;
       default:
         showTip('网络出错', 'warn')
         break;
     }
   }
-
+  // 显示提示
   const showTip = (msg:string, type='tip', duration=1000) => {
     setMsg(msg)
     setType(type)
@@ -95,7 +101,6 @@ const Money = () => {
     }, duration)
   }
 
-  const history = useHistory()
   return (
     <Layout>
       {
@@ -107,25 +112,28 @@ const Money = () => {
             type={type} />)
       }
       <HeaderSection title="记一笔帐"
-              left={<Icon name="back" onClick={history.goBack}/>}
+              left={<Icon name="back" onClick={() => history.goBack}/>}
               right={
                 <CategorySection
-                value={selected.category}
-                onChange={category => onChange({category})}/>
+                  value={category}
+                  onChange={category => toggleCategory(category)}/>
               }/>
       <TagsSection
-        value={selected.tagId}
-        category={selected.category}
+        value={formData.tagId}
+        category={category}
         onChange={tagId => onChange({tagId})}/>
       <NoteSection
-        value={selected.note}
+        value={formData.note}
         onChange={note => onChange({note})}/>
       <NumberPadSection
-        value={selected.amount}
+        value={formData.amount}
         onChange={amount => onChange({amount})}
-        onOk={submit} />
+        onOk={saveRecord} />
     </Layout>
   )
 }
 
-export default Money;
+const mapStatetoProps = (state: StoreState) => {
+  return state
+}
+export default connect(mapStatetoProps, {toggleCategory})(Money);
