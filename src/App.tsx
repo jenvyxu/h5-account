@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   HashRouter as Router,
   Switch,
   Route,
   Redirect
 } from "react-router-dom";
+import { bindActionCreators, Dispatch } from 'redux';
 import Money from 'view/Money';
 import Statistics from 'view/Statistics';
 import Tags from 'view/Tags';
@@ -12,13 +13,15 @@ import NoMatch from 'view/NoMatch';
 import styled from 'styled-components';
 import {Tag} from './view/Tag';
 import AddTag from './view/AddTag';
-import {Home} from './view/Home'
+import {Home} from './view/Home';
 
 const AppWrapper = styled.div`
   color: #333;
 `
+type Props = {
 
-function App() {
+}
+const App: React.FC<Props> = () => {
   return (
     <AppWrapper>
       <Router>

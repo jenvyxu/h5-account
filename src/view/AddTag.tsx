@@ -6,8 +6,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 import {useTags} from '../hooks/useTags';
 import {Header} from '../components/Header';
 import {connect} from 'react-redux';
-import {addTag} from '../redux/actions'
-import type {Tag} from '../redux/reducers/tagList'
+import {addTag} from '../redux/actions';
+import type {Tag} from '../redux/types/tagTypes';
 
 const Wrapper = styled.div`
   min-height: 100vh;

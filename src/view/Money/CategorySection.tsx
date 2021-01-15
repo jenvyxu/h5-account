@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
-import {toggleCategory} from '../../redux/actions';
-import type {Category} from '../../redux/reducers/category';
-import type {TagList} from '../../redux/reducers/tagList'
+import {toggleCategory} from '../../redux/reducers/categorySlice';
+import type {Category} from '../../redux/types/categoryTypes';
+import type {TagList} from '../../redux/types/tagTypes'
 
 const Wrapper = styled.ul`
   display: flex;
@@ -44,10 +44,7 @@ const CategorySection: React.FC<Props> = ({category, toggleCategory}) => {
 const mapStatetoProps = (state: {
   category: Category,
   tagList: TagList
-}) => {
-  return {
-    category: state.category
-  }
-}
+}) => ({ category: state.category })
+
 
 export default connect(mapStatetoProps, { toggleCategory })(CategorySection)

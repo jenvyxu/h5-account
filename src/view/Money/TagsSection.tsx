@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import React, {useEffect} from 'react';
-import {useTags} from 'hooks/useTags';
 import Icon from 'components/Icon';
 import {Link} from 'react-router-dom';
-import type {TagList} from '../../redux/reducers/tagList'
+import type {TagList} from '../../redux/types/tagTypes';
 
 const Wrapper = styled.section`
   flex-grow: 1;
@@ -69,7 +68,6 @@ type Props = {
 }
 
 const TagsSection: React.FC<Props> = ({value, category, onChange, tagList}) => {
-  // const {tags} = useTags()
   const getClass = (tagId: number) => value === tagId ? 'selected' : ''
   const onToggleTag = (tagId: number) => {
     if(value === tagId) {

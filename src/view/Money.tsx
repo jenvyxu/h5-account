@@ -12,8 +12,8 @@ import {Header} from '../components/Header';
 import Icon from '../components/Icon';
 import {useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
-import type {Category} from '../redux/reducers/category';
-import type {TagList} from '../redux/reducers/tagList'
+import type {Category} from '../redux/types/categoryTypes';
+import type {TagList} from '../redux/types/tagTypes';
 
 const AnimatedToast = animated(Toast);
 

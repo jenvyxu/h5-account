@@ -1,9 +1,15 @@
-import rootReducer from './reducers';
-import { createStore, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { configureStore } from '@reduxjs/toolkit';
 
-const store = createStore(rootReducer, composeWithDevTools(
-  applyMiddleware(),
-));
+import tagSlice from './reducers/tagSlice';
+import categorySlice from './reducers/categorySlice';
+
+const store = configureStore({
+  reducer: {
+    category: categorySlice,
+    tagList: tagSlice, 
+  }
+});
+
+// store.dispatch<any>(fetchTagList())
 
 export default store

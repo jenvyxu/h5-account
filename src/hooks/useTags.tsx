@@ -36,12 +36,12 @@ const useTags = () => {
 
   // 获取tagList
   useEffect(() => {
-    httpGetTag().then(({tagList}) => {
-      const newTagList = initialTags.concat(tagList)
-      setTags(newTagList)
-      let idMax = newTagList.reduce((id, tag) => Math.max(id, tag.id), 0)
-      setNextId(idMax + 1)
-    })
+    // httpGetTag().then(({tagList}) => {
+    //   const newTagList = initialTags.concat(tagList)
+    //   setTags(newTagList)
+    //   let idMax = newTagList.reduce((id, tag) => Math.max(id, tag.id), 0)
+    //   setNextId(idMax + 1)
+    // })
   }, [])
 
   useUpdate(() => {

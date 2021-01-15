@@ -1,19 +1,5 @@
-
-import {ADD_TAG, DELETE_TAG, UPDATE_TAG} from '../actionTypes'
-
-export type Tag = {
-  id: number,
-  name: string,
-  icon: string,
-  category: 'cost'|'income'
-}
-
-export type TagList = Array<Tag>
-
-type Action = {
-  type: typeof ADD_TAG|typeof DELETE_TAG|typeof UPDATE_TAG
-  payload: Tag | number
-}
+import type { Tag, TagList, TagAction } from '../types/tagTypes';
+import {createSlice} from '@reduxjs/toolkit';
 
 const initialState: TagList = [
   { id: 1, name: '房租', icon: 'fangzu', category: 'cost' },
@@ -41,16 +27,22 @@ function nextId(tagList: TagList) {
   return maxId + 1
 }
 
-export default function(state: TagList = initialState, action: Action)  {
-  switch(action.type) {
-    case ADD_TAG: {
-      return [...state, {...action.payload as Partial<Tag>, id: nextId(state)}]
+const tag = createSlice({
+  name: 'tag',
+  initialState,
+  reducers: {
+    addTag(state, action) {
+      state.push({...action.payload, id: nextId(state)})
+    },
+    deleteTag(state, action) {
+      state = state.filter(tag => tag.id !== action.payload)
+    },
+    getTagList(state, action) {
+      state.concat(action.payload)
+    }
+  },
+})
 
-    }
-    case DELETE_TAG: {
-      return state.filter(tag => tag.id !== action.payload)
-    }
-    default: 
-      return state
-  }
-}
+export const { addTag, deleteTag, getTagList } = tag.actions
+
+export default tag.reducer

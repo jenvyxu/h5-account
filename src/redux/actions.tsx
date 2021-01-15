@@ -1,4 +1,4 @@
-import { TOGGLE_CATEGORY, ADD_TAG, DELETE_TAG } from './actionTypes'
+import { TOGGLE_CATEGORY, ADD_TAG, DELETE_TAG, LOAD_TAGLIST } from './actionTypes'
 
 export const addTag = (tag: {
   name: string,
@@ -24,3 +24,4 @@ export const toggleCategory = (category: 'income'|'cost') => {
     payload: {category}
   }
 }
+
