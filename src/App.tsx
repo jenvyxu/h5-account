@@ -5,7 +5,6 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
-import { bindActionCreators, Dispatch } from 'redux';
 import Money from 'view/Money';
 import Statistics from 'view/Statistics';
 import Tags from 'view/Tags';

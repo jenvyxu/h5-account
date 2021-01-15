@@ -1,5 +1,6 @@
-import type { Tag, TagList, TagAction } from '../types/tagTypes';
-import {createSlice} from '@reduxjs/toolkit';
+import type {TagList} from '../types/tagTypes';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import { httpGetTag } from '../../http'
 
 const initialState: TagList = [
   { id: 1, name: '房租', icon: 'fangzu', category: 'cost' },
@@ -26,6 +27,15 @@ function nextId(tagList: TagList) {
   let maxId = tagList.reduce((id, tag) => Math.max(tag.id, id), 0)
   return maxId + 1
 }
+// 获取标签列表
+export const fetchTagList = createAsyncThunk(
+  'tag/fetchTagList',
+  async () => {
+    const {tagList} = await httpGetTag()
+    console.log('i get')
+    return tagList
+  }
+)
 
 const tag = createSlice({
   name: 'tag',
@@ -41,8 +51,12 @@ const tag = createSlice({
       state.concat(action.payload)
     }
   },
+  extraReducers: {
+    [fetchTagList.fulfilled.type]: (state, action) => {
+      state.push(...action.payload)
+    }
+  }
 })
 
 export const { addTag, deleteTag, getTagList } = tag.actions
-
 export default tag.reducer

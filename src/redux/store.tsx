@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import tagSlice from './reducers/tagSlice';
+import tagSlice, {fetchTagList} from './reducers/tagSlice';
 import categorySlice from './reducers/categorySlice';
 
 const store = configureStore({
@@ -10,6 +10,6 @@ const store = configureStore({
   }
 });
 
-// store.dispatch<any>(fetchTagList())
+store.dispatch<any>(fetchTagList())
 
 export default store
