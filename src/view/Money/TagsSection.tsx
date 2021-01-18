@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, {useEffect} from 'react';
+import React from 'react';
 import Icon from 'components/Icon';
 import {Link} from 'react-router-dom';
 import {TagList} from '../../redux/types/tagTypes';

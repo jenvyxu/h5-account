@@ -71,8 +71,6 @@ const tabs = [
     icon: 'income'
   }]
 
-type TagList = { id: number; name: string; icon: string; category: "cost" | "income"; }[]
-
 const Statistics = () => {
   const [category, setCategory] = useState<'income'|'expense'>('expense')
   const {records} = useRecords()

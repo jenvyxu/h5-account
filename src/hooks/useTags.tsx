@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {useUpdate} from 'hooks/useUpdate';
-import {httpAddTag, httpGetTag} from '../http';
 
 type Tag = {
   id: number,
@@ -35,14 +34,14 @@ const useTags = () => {
   let [nextId, setNextId] = useState(0)
 
   // 获取tagList
-  useEffect(() => {
-    // httpGetTag().then(({tagList}) => {
-    //   const newTagList = initialTags.concat(tagList)
-    //   setTags(newTagList)
-    //   let idMax = newTagList.reduce((id, tag) => Math.max(id, tag.id), 0)
-    //   setNextId(idMax + 1)
-    // })
-  }, [])
+  // useEffect(() => {
+  //   httpGetTag().then(({tagList}) => {
+  //     const newTagList = initialTags.concat(tagList)
+  //     setTags(newTagList)
+  //     let idMax = newTagList.reduce((id, tag) => Math.max(id, tag.id), 0)
+  //     setNextId(idMax + 1)
+  //   })
+  // }, [])
 
   useUpdate(() => {
     window.localStorage.setItem('tags', JSON.stringify(tags))
