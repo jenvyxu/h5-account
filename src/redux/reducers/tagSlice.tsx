@@ -1,6 +1,8 @@
-import type {TagList} from '../types/tagTypes';
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import { httpGetTag } from '../../http'
+import {RootState} from '../store';
+import { httpGetTag, httpAddTag } from '../../http';
+import { Tag, TagList } from '../types/tagTypes';
+import { Category } from '../types/categoryTypes';
 
 const initialState: TagList = [
   { id: 1, name: '房租', icon: 'fangzu', category: 'cost' },
@@ -27,12 +29,33 @@ function nextId(tagList: TagList) {
   let maxId = tagList.reduce((id, tag) => Math.max(tag.id, id), 0)
   return maxId + 1
 }
+
+export type TagArgs = {
+    name: string,
+    icon: string,
+    category: Category
+  }
+
+// 添加标签
+export const asyncAddTag = createAsyncThunk<Tag, TagArgs, { state: RootState }>(
+  'tag/asyncAddTag',
+  async (obj, { getState, rejectWithValue }) => {
+    const preTagList = getState().tagList
+    const newTag = {...obj, id: nextId(preTagList)}
+    try {
+      await httpAddTag(newTag)
+      return newTag
+    }catch(err) {
+      return rejectWithValue(err)
+    }
+  }
+)
+
 // 获取标签列表
 export const fetchTagList = createAsyncThunk(
   'tag/fetchTagList',
   async () => {
     const {tagList} = await httpGetTag()
-    console.log('i get')
     return tagList
   }
 )
@@ -51,10 +74,16 @@ const tag = createSlice({
       state.concat(action.payload)
     }
   },
-  extraReducers: {
-    [fetchTagList.fulfilled.type]: (state, action) => {
+  extraReducers: builder => { 
+    builder.addCase(fetchTagList.fulfilled, (state, action) => {
       state.push(...action.payload)
-    }
+    })
+    builder.addCase(asyncAddTag.fulfilled, (state, action) => {
+      state.push(action.payload)
+    })
+    builder.addCase(asyncAddTag.rejected, (state, action) => {
+      console.log(action.payload)
+    })
   }
 })
 

@@ -1,20 +1,19 @@
 import axios from 'axios';
-import type {Tag} from '../hooks/useTags'
+import { TagList, Tag } from 'redux/types/tagTypes';
 
 // 使用unicloud空间
 const host = 'https://fd9b10f6-6863-4898-962b-cdd165d2cdfb.bspapp.com'
 
 // 新增标签
 const httpAddTag = async (
-    action: string, 
-    data: { name: string, icon: string, id: number, category: string }
-  ): Promise<{tagList: Tag[], success: boolean}> => {
-  const {data: res} = await axios.post(host + '/http/tag/' + action, data)
-  return res
+    data: Tag
+  ): Promise<TagList> => {
+  const { data: {tagList} } = await axios.post(host + '/http/tag/add', data)
+  return tagList
 }
 
 // 获取标签列表
-const httpGetTag = async (): Promise<{tagList: Tag[], success: boolean}> => {
+const httpGetTag = async (): Promise<{tagList: TagList, success: boolean}> => {
   const {data: res} = await axios.get(host + '/http/tag/getTagList')
   return res
 }

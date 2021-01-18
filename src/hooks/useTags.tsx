@@ -48,20 +48,20 @@ const useTags = () => {
     window.localStorage.setItem('tags', JSON.stringify(tags))
   }, tags)
 
-  const addTag = async (obj: { name: string, icon: string, category: 'income'|'cost'}):Promise<string> => {
-    const {name, icon} = obj
-    if(name !== '' && icon !== '') {
-      const {success, tagList} = await httpAddTag('add', { ...obj, id: nextId })
-      if(success){
-        setTags(tagList.concat(tags))
-        return 'success'
-      } else {
-        return 'fail'
-      }
-    } else {
-      return 'fail'
-    }
-  }
+  // const addTag = async (obj: { name: string, icon: string, category: 'income'|'cost'}):Promise<string> => {
+  //   const {name, icon} = obj
+  //   if(name !== '' && icon !== '') {
+  //     const {success, tagList} = await httpAddTag('add', { ...obj, id: nextId })
+  //     if(success){
+  //       setTags(tagList.concat(tags))
+  //       return 'success'
+  //     } else {
+  //       return 'fail'
+  //     }
+  //   } else {
+  //     return 'fail'
+  //   }
+  // }
 
   const findTag = (id: number) => tags.filter(tag => tag.id === id)[0]
 
@@ -98,7 +98,7 @@ const useTags = () => {
       return tags
     }
   }
-  return { tags, getTags, getName, setTags, findTag, findTagIndex, updateTag, deleteTag, addTag };
+  return { tags, getTags, getName, setTags, findTag, findTagIndex, updateTag, deleteTag };
 }
 
 export {useTags};

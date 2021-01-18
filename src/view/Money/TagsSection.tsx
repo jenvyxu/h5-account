@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React, {useEffect} from 'react';
 import Icon from 'components/Icon';
 import {Link} from 'react-router-dom';
-import type {TagList} from '../../redux/types/tagTypes';
+import {TagList} from '../../redux/types/tagTypes';
 
 const Wrapper = styled.section`
   flex-grow: 1;
