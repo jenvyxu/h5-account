@@ -2,18 +2,18 @@ import Layout from 'components/Layout';
 import { useRecords } from 'hooks/useRecords';
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import CategorySection from './Money/CategorySection';
-import {NoteSection} from './Money/NoteSection';
-import {NumberPadSection} from './Money/NumberPadSection';
-import {TagsSection} from './Money/TagsSection';
+import CategorySection from './CategorySection';
+import {NoteSection} from './NoteSection';
+import {NumberPadSection} from './NumberPadSection';
+import {TagsSection} from './TagsSection';
 import {animated, useTransition} from 'react-spring';
-import {Toast} from '../components/Toast';
-import {Header} from '../components/Header';
-import Icon from '../components/Icon';
+import {Toast} from '../../components/Toast';
+import {Header} from '../../components/Header';
+import Icon from '../../components/Icon';
 import {useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
-import type {Category} from '../redux/types/categoryTypes';
-import type {TagList} from '../redux/types/tagTypes';
+import type {Category} from '../../redux/types/categoryTypes';
+import type {TagList} from '../../redux/types/tagTypes';
 
 const AnimatedToast = animated(Toast);
 
@@ -108,11 +108,12 @@ const Money: React.FC<Props> = ({category, tagList}) => {
             style={props}
             type={type} />)
       }
-      <HeaderSection title="记一笔帐"
-              left={<Icon name="back" onClick={() => history.goBack}/>}
-              right={
-                <CategorySection />
-              }/>
+      <HeaderSection 
+        title="记一笔帐"
+        left={<Icon name="back" onClick={() => history.goBack}/>}
+        right={
+          <CategorySection />
+        }/>
       <TagsSection
         value={formData.tagId}
         category={category}
@@ -124,7 +125,7 @@ const Money: React.FC<Props> = ({category, tagList}) => {
       <NumberPadSection
         value={formData.amount}
         onChange={amount => onChange({amount})}
-        onOk={saveRecord} />
+        saveRecord={saveRecord} />
     </Layout>
   )
 }

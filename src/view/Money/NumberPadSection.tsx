@@ -1,62 +1,40 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Wrapper} from './NumberPadSection/Wrapper';
-import {generateOutput} from './NumberPadSection/generateOutput';
+import updateOutput from './NumberPadSection/updateOutput';
 import { CONSTANTS } from 'lib/constants';
 
-type Props ={
+type Props = {
   value: number;
   onChange: (value: number) => void;
-  onOk?: () => void;
+  saveRecord: () => void;
 }
-const NumberPadSection: React.FC<Props> = (props) => {
-  const [output, _setOutput] = useState(props.value.toString())
-  const setOutput = (output: string) => {
-    let newOutput: string
-    if(output.length > 20) {
-      newOutput = output.slice(0, 20)
-    } else if(output.length === 0 ) {
-      newOutput = '0'
-    } else {
-      newOutput = output
-    }
-    _setOutput(newOutput)
-    props.onChange(parseFloat(newOutput))
-  }
-  const ocClickButtonWrapper = (e: React.MouseEvent) => {
-    const text= (e.target as HTMLButtonElement).textContent
-    if(text === null) {return}
+
+const NumberPadSection: React.FC<Props> = ({saveRecord, onChange, value}) => {
+  const [output, setOutput] = useState(value + '')
+
+  const handleClickPad = (e: React.MouseEvent) => {
+    const text = (e.target as HTMLElement).textContent
+    if(text === null) return
+    // 保存记账信息
     if(text === '完成') {
-      if(props.onOk){
-        props.onOk()
-        _setOutput('0')
-      }
+      saveRecord()
+      onChange(0)
       return
     }
-    // @ts-ignore
-    setOutput(generateOutput(text, output))
+    // 限制输入长度为20
+
+    let result = updateOutput(text, '' + output)
+
+    if(result.length > 25) return
+    // 更新显示信息    
+    setOutput(result)
+    
   }
-
-  useEffect(() => {
-    // calcFloat(123, -100.2938); // 0.497
-    // calcFloat(0, 0) // 913.916
-    // calcFloat(0, 283.937)
-    // calcFloat(-123.9273, 1826)
-    // calcFloat(0.283,182.283)
-    // calcFloat(-100.837, -34.45283)
-    // calcFloat(-1255.640000644, 34.45283)
-    // calcFloat(-110, 100.2937)
-    // calcFloat(-0.23, 0.23)
-    // calcFloat(-12.23001, 12.23001)
-    // calcFloat(-10.78, -12.1002)
-    // calcFloat(10.01, -12.12345)
-
-  }, [])
 
   return (
     <Wrapper>
       <div className="output">{output}</div>
-      <div className="pad clearfix"
-            onClick={ocClickButtonWrapper}>
+      <div className="pad clearfix" onClick={handleClickPad}>
         <button>1</button>
         <button>2</button>
         <button>3</button>
@@ -70,9 +48,9 @@ const NumberPadSection: React.FC<Props> = (props) => {
         <button>9</button>
         <button>-</button>
         <button>.</button>
-        <button className="zero">0</button>
+        <button className="btn-zero">0</button>
         <button>{CONSTANTS.clear}</button>
-        <button className="ok">{/(\D)/.test(output)  ? '=' : CONSTANTS.complete}</button>
+        <button className="btn-complete">{/^\-?\d+\.?\d*$/.test(output)  ? CONSTANTS.complete : '='}</button>
       </div>
     </Wrapper>
   )
