@@ -13,3 +13,12 @@
 [预览](https://jenvyxu.github.io/save-my-money/build/index.html)
 
 <img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/home.png" alt="截图" width="300"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/tags.png" alt="截图" width="300"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/add.png" alt="截图" width="300">
+
+# 接口规范
+返回数据格式: 
+```json
+{
+  code: 0  // 0代表成功 1代表失败
+  data //返回的数据
+}
+```

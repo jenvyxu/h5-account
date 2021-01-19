@@ -7,12 +7,10 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   justify-content: center;
 `
-
 const Record = styled.div`
   width: 100%;
   margin: 16px;
 `
-
 const RecordHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -30,7 +28,6 @@ const RecordHeader = styled.div`
   }   
 }
 `
-
 const RecordContent = styled.ul`
   >li {
     display: flex;
@@ -42,7 +39,6 @@ const RecordContent = styled.ul`
     border-radius: 8px;
   }
 `
-
 const ItemIcon = styled.div`
   display: flex;
   align-items: center;
@@ -53,7 +49,6 @@ const ItemIcon = styled.div`
     margin-right: 6px;
   }
 `
-
 const ItemContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -68,7 +63,6 @@ const ItemContent = styled.div`
     }
   }
 `
-
 type Props = {
   data: [{
     category: 'expense' | 'income',

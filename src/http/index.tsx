@@ -36,12 +36,11 @@ const httpAddRecord = async (action: string, data: {
   return await axios.post(host + '/http/record/' + action, data)
 }
 
-const httpGetStatistic = async (data: {
-    start: string,
-    end: string,
-    type: 'total'|'income'|'cost'
+const httpGetOverview = async (data: {
+    count: number,
+    timestamp: string
   }) => {
-  const { data: list } = await axios.post(host + '/http/record/statistic', data)
+  const { data: list } = await axios.post(host + '/http/statistic/overview', data)
   return list
 }
 
@@ -59,6 +58,6 @@ export {
   deleteTag,
   updateTag, 
   httpAddRecord, 
-  httpGetStatistic,
+  httpGetOverview,
   httpGetStatisticMonthly
 }

@@ -60,6 +60,7 @@ export default function updateOutput(text: string, output: string) {
       let total = newStrArr.reduce((sum, cur)=> {
         return sum.plus(cur)
       }, new Decimal(0))
+      console.log(typeof total.valueOf())
       return total.valueOf()
     default:
       return '0';
