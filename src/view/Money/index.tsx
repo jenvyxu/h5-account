@@ -9,12 +9,10 @@ import {TagsSection} from './TagsSection';
 import {animated, useTransition} from 'react-spring';
 import {Toast} from '../../components/Toast';
 import {Header} from '../../components/Header';
-import Icon from '../../components/Icon';
 import {useHistory} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import type {Category} from '../../redux/types/categoryTypes';
-import type {TagList} from '../../redux/types/tagTypes';
-
+import {RootState} from '../../redux/store'
 const AnimatedToast = animated(Toast);
 
 const HeaderSection = styled(Header)`
@@ -37,17 +35,15 @@ const initialFormData = {
   category: 'cost' as Category,
   amount: 0
 }
-type Props = {
-  category: Category,
-  tagList: TagList,
-}
 
-const Money: React.FC<Props> = ({category, tagList}) => {
+const Money: React.FC = () => {
   const [formData, setFormData] = useState({
     tagId: 0,
     note: '',
     amount: 0
   })
+  const tagList = useSelector((state: RootState )=> state.tagList)
+  const category = useSelector((state: RootState) => state.category)
   const history = useHistory()
   const [visible, setVisible] = useState(false)
   const transitions = useTransition(visible, null, {
@@ -110,10 +106,7 @@ const Money: React.FC<Props> = ({category, tagList}) => {
       }
       <HeaderSection 
         title="记一笔帐"
-        left={<Icon name="back" onClick={() => history.goBack}/>}
-        right={
-          <CategorySection />
-        }/>
+        right={<CategorySection />}/>
       <TagsSection
         value={formData.tagId}
         category={category}
@@ -130,9 +123,4 @@ const Money: React.FC<Props> = ({category, tagList}) => {
   )
 }
 
-const mapStatetoProps = (state: {
-  tagList: TagList,
-  category: Category
-}) => state
-
-export default connect(mapStatetoProps)(Money);
+export default Money;

@@ -19,16 +19,15 @@ const NumberPadSection: React.FC<Props> = ({saveRecord, onChange, value}) => {
     if(text === '完成') {
       saveRecord()
       onChange(0)
+      setOutput('0')
       return
     }
     // 限制输入长度为20
-
     let result = updateOutput(text, '' + output)
-
-    if(result.length > 25) return
+    if(result.length > 20) return
     // 更新显示信息    
     setOutput(result)
-    
+    onChange(+result)
   }
 
   return (

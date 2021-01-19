@@ -30,8 +30,6 @@ const useRecords = () => {
       return 'requireTag'
     }
     const record = {...newRecord, createAt: (new Date()).toISOString()}
-    // setRecords([...records, record])
-    console.log(record);
     const res = await httpAddRecord('add', record)
     if(res.statusText === 'OK' ) {
       return 'complete'
