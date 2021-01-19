@@ -17,10 +17,8 @@ import {Home} from './view/Home';
 const AppWrapper = styled.div`
   color: #333;
 `
-type Props = {
 
-}
-const App: React.FC<Props> = () => {
+const App: React.FC = () => {
   return (
     <AppWrapper>
       <Router>
