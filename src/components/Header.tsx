@@ -12,7 +12,6 @@ const Wrapper = styled.header`
   >.title {
     font-weight: bold;
     text-align: center;
-    padding: 6px 0;
     color: #010101;
   }
   .icon {
