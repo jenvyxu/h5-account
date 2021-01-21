@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Layout from '../components/Layout';
 import Icon from '../components/Icon';
 import {Header} from '../components/Header';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {RecentRecord} from './RecentRecord';
+import { useDispatch } from 'react-redux';
+import {getRecordList} from '../redux/reducers/recordSlice';
 
 const Total = styled.div`
   color: #9ecdc1;
@@ -64,8 +66,12 @@ const previewData = Array(7).fill(Array(5).fill({
   amount: 123
 }))
 
-const Home: React.FC = (props) => {
+const Home: React.FC = () => {
   const [visible, setVisible] = useState(false)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getRecordList({day: 6, timestamp: new Date().toISOString()}))
+  }, [])
   return (
     <Layout>
       <Header title="TODAY" />
@@ -75,7 +81,7 @@ const Home: React.FC = (props) => {
         <span>收入￥1991</span>
       </Total>
       <RecordButton>
-        <Link to="/money">记一笔</Link>
+        <Link to='/money'>记一笔</Link>
       </RecordButton>
       <ShowRecordButton onClick={() =>setVisible(!visible)}>展示近七天账单
         <Icon name="up" className={visible?'down':'up'}/>
