@@ -2,7 +2,9 @@ import { number } from 'mathjs';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styled from 'styled-components';
 import {httpGetOverview} from '../../http';
-import {Decimal} from 'decimal.js'
+import {Decimal} from 'decimal.js';
+import message from '../../lib/message';
+
 
 type List = Array<{
   amount: number
@@ -116,7 +118,7 @@ const Overview: React.FC = () => {
       setXaxisData(dateList)
       setLoading(false)
     } catch (e) {
-      throw e
+      setLoading(false)
     }
   }
   // 获取x轴日期列表
@@ -157,8 +159,6 @@ const Overview: React.FC = () => {
     }
     setTotalCostList(costList)
     setTotalIncomeList(incomeList)
-    console.log(incomeList)
-    console.log(costList)
   }
   // 获取前count天数据
   const getPrevData = () => {

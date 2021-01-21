@@ -19,18 +19,20 @@ type Props = {
   message: string;
   style: object;
   type: string;
+  children: any
 }
 
-const Toast: React.FC<Props> = (props) => {
-  const {style, children, message,type, ...rest} = props
+const Toast: React.FC<Props> = (props: any) => {
+  const {style, children, message, type, ...rest} = props
   return (
     <Wrapper type={type} {...rest} style={style}>{message}</Wrapper>
   )
 }
 
 Toast.defaultProps = {
-  type:'tip',
+  type:'success',
   message:'提交成功'
 }
 
 export {Toast}
+

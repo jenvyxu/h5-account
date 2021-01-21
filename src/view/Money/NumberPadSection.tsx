@@ -12,12 +12,12 @@ type Props = {
 const NumberPadSection: React.FC<Props> = ({saveRecord, onChange, value}) => {
   const [output, setOutput] = useState(value + '')
 
-  const handleClickPad = (e: React.MouseEvent) => {
+  const handleClickPad = async (e: React.MouseEvent) => {
     const text = (e.target as HTMLElement).textContent
     if(text === null) return
     // 保存记账信息
     if(text === '完成') {
-      saveRecord()
+      await saveRecord()
       onChange(0)
       setOutput('0')
       return
