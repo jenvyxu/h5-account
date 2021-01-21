@@ -1,6 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
+import {RecordItem} from '../../redux/reducers/recordSlice';
+import {getRecordList} from '../../redux/reducers/recordSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import {RootState} from '../../redux/store'
+
 const echarts = require('echarts')
 
 const Title = styled.div`
@@ -74,14 +79,58 @@ const Chart = styled.div`
 
 type Props = {
   type: 'cost' | 'income',
-  list: {name: string, icon: string, total: number, percent: string}[]
+  current: Date,
 }
 
-const PieChart: React.FC<Props> = (props) => {
-  const {type, list} = props
-  const chartRef = useRef(null)
-
+const PieChart: React.FC<Props> = ({type, current}) => {
+  // 获取当月的记账信息
+  const timestamp = current.toISOString()
+  const dispatch = useDispatch()
+  const recordList = useSelector((state: RootState) => state.record.statisticReacordList)
+  const tagList = useSelector((state: RootState) => state.tagList)
   useEffect(() => {
+    dispatch(getRecordList({month: 0, timestamp}))
+  }, [])
+  
+  // 根据type类型刷选出支出列表还是收入列表
+  const selectedRecordListByType = useMemo(() =>{
+    return recordList.reduce(
+      (newList, item) => 
+        item.category === type ? 
+        [...newList, item] : 
+        newList,
+      [] as RecordItem[])
+  }, [type, recordList.length])
+
+  // 当前分类的总金额
+  const totalAmount = useMemo(() => {
+    return selectedRecordListByType.reduce((t, item) =>t + item.amount, 0)    
+  }, [type, recordList.length])
+  
+  // 合计每一种标签的收入和支出的总和
+  const filterList = useMemo(() => {
+    // 找出有哪些标签
+    const tagIdList = selectedRecordListByType.reduce(
+      (target, item) => target.indexOf(item.tagId) > -1 ? target : [...target, item.tagId],
+       [] as Array<number>)
+    // 对每一个标签的金额求和
+    return tagIdList.map((id) => {
+      // 找出id对应的标签信息
+      const tagObj = tagList.reduce((target, item) => item.id === id ? item : target)
+      // 求出每个标签的金额总和
+      const total = selectedRecordListByType.reduce((target, item) => item.tagId === id ? target + item.amount : target, 0)
+      // 一个标签下总额占分类总额的百分比
+      const percent = (total * 100 / totalAmount).toFixed(2) + '%'
+      return { ...tagObj, total, percent }
+    })
+  }, [type, recordList.length])
+
+  // 绘制图表
+  const chartRef = useRef(null)
+  useEffect(() => {
+    initChart()
+  })
+  const initChart = () => {
     const option = {
       tooltip: {
         trigger: 'item',
@@ -110,27 +159,27 @@ const PieChart: React.FC<Props> = (props) => {
           labelLine: {
             show: true
           },
-          data: list.map((item: {name: string, total: number}) => ({
-            name: item.name,
-            value: item.total
+          data: filterList.map(({ total, name}) => ({
+            name: name,
+            value: total
           })),
         }
       ]
     };
     const chart = echarts.init(chartRef.current)
     chart.setOption(option)
-  })
+  }
 
   return (
     <div >
       <Title>
-        <span className="label">{type=== 'cost' ? '共支出' : '共收入'}</span>
-        <span className="total">￥{102}</span>
-        <span className="count">共{list.length}条{type==='cost'?'支出':'收入'}目录</span>
+        <span className="label">{type === 'cost' ? '共支出' : '共收入'}</span>
+        <span className="total">￥{selectedRecordListByType.reduce((t, item) =>t + item.amount, 0)}</span>
+        <span className="count">共{selectedRecordListByType.length}条{ type==='cost' ? '支出' : '收入' }目录</span>
       </Title>
       <Chart ref={chartRef} />
       <ItemWrapper>
-        {list.map((item, index) => (
+        {filterList.map((item, index) => (
           <Item key={index}>
             <Icon name={item.icon} />
             <BarWrapper>
