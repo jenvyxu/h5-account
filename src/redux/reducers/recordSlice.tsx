@@ -18,32 +18,53 @@ type RecordArgs =  {
   timestamp: string
 }
 
-export const getRecordList = createAsyncThunk<Array<any>, RecordArgs, { state: RootState }>(
+export const getRecordList = createAsyncThunk<void, RecordArgs, { state: RootState }>(
   'record/getRecordList',
-  async (obj, { rejectWithValue }) => {
+  async (obj, { rejectWithValue, dispatch }) => {
     try {
-      const list = await httpGetRecordList(obj)
-      return list
-    }catch(err) {
+      if(obj.month === undefined) {
+        const list = await httpGetRecordList(obj)
+        dispatch({type: 'record/getRecordListByDay', payload: list})
+      } else {
+        const list = await httpGetRecordList(obj)
+        dispatch({type: 'record/getRecordListByMonth', payload: list})
+      }
+    } catch (err) {
       return rejectWithValue(err)
     }
   }
 )
 
+interface IntialState<T> {
+  homeRecordList: Array<T>,
+  statisticReacordList: Array<T>
+}
+
 const record = createSlice({
   name: 'record',
-  initialState: [] as RecordItem[],
+  initialState: {
+    homeRecordList: [],
+    statisticReacordList: []
+  } as IntialState<RecordItem>,
   reducers:{
     addRecord: (state, action) => {
       state = action.payload
     },
     removeRecord: (state, action) => {
       state = action.payload
+    },
+    getRecordListByDay: (state, action) => {
+      state.homeRecordList = action.payload
+    },
+    getRecordListByMonth: (state, action) => {
+      state.statisticReacordList = action.payload
     }
   },
-  extraReducers: builder => { 
-    builder.addCase(getRecordList.fulfilled, (state, action) => action.payload)
-  }
+  // extraReducers: builder => {
+  //   builder.addCase(getRecordList.fulfilled, (state, action) => {
+     
+  //   })
+  // }
 })
 
 
