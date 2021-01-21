@@ -65,11 +65,11 @@ const Home: React.FC = () => {
   const dispatch = useDispatch()
   const current = new Date()
   const timestamp = current.toISOString()
-  const recordList = useSelector((state: RootState) => state.record)
+  const recordList = useSelector((state: RootState) => state.record.homeRecordList)
   // 今天的记账信息
   const todayRecordList = useSelector<RootState>(({record})=> {
     const match = timestamp.slice(0, 10)
-    return record.reduce((arr, item) => {
+    return record.homeRecordList.reduce((arr, item) => {
       if(item.createAt.includes(match)){
         arr.push(item)
       }

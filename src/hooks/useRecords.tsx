@@ -23,7 +23,6 @@ const useRecords = () => {
   }, records)
 
   const addRecord = async (newRecord: newRecordItem) => {
-    console.log('newRecord', newRecord)
     if(newRecord.amount <= 0 ){
       return 'requireMoney'
     }

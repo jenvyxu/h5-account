@@ -118,7 +118,7 @@ const RecentRecord:React.FC<Props> = ({list}) => {
       formatList.push({date: dayjs(key).format('MM月DD日'), list: formatObj[key]})
     }
     return formatList
-  }, list)
+  }, [list])
 
   return (
     <Wrapper>

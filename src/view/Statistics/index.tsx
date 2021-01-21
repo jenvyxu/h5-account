@@ -68,8 +68,10 @@ const tabs = [
     icon: 'income'
   }]
 
+type TabType = 'overview' | 'cost' | 'income'
+
 const Statistics = () => {
-  const [selected, setSelected] = useState('overview')
+  const [selected, setSelected] = useState<TabType>('overview')
   const [current, setCurrent] = useState(new Date())
 
 
@@ -96,7 +98,7 @@ const Statistics = () => {
       <TabHeader>
         {tabs.map((tab) =>
           <li 
-            onClick={() => {setSelected(tab.icon)}}
+            onClick={() => {setSelected(tab.icon as TabType)}}
             key={tab.icon}
             className={selected === tab.icon ? 'selected' : ''}
           >
@@ -108,8 +110,8 @@ const Statistics = () => {
       </TabHeader>
       {
         selected === 'overview' ?
-          <Overview /> :<div />
-          // <PieChart current={current} type={selected === 'cost' ? 'cost' : 'income'} />
+          <Overview /> :
+          <PieChart current={current} type={selected} />
       }
     </Layout>
   )
