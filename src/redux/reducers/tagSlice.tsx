@@ -31,10 +31,10 @@ function nextId(tagList: TagList) {
 }
 
 export type TagArgs = {
-    name: string,
-    icon: string,
-    category: Category
-  }
+  name: string,
+  icon: string,
+  category: Category
+}
 
 // 添加标签
 export const asyncAddTag = createAsyncThunk<Tag, TagArgs, { state: RootState }>(
