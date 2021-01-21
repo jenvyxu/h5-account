@@ -8,6 +8,7 @@ export type RecordItem = {
   category: 'income' | 'cost';
   amount: number;
   createAt: string;
+  _id?: string
 }
 export type NewRecordItem = Omit<RecordItem, 'createAt'>
 
@@ -41,9 +42,7 @@ const record = createSlice({
     }
   },
   extraReducers: builder => { 
-    builder.addCase(getRecordList.fulfilled, (state, action) => {
-      state.push(...action.payload)
-    })
+    builder.addCase(getRecordList.fulfilled, (state, action) => action.payload)
   }
 })
 

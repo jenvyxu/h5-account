@@ -1,6 +1,11 @@
 import Icon from 'components/Icon';
-import React from 'react';
+import React, {useMemo} from 'react';
 import styled from 'styled-components';
+import {RecordItem} from '../redux/reducers/recordSlice';
+import dayjs from 'dayjs'
+import Decimal from 'decimal.js';
+import {RootState} from 'redux/store';
+import {useSelector} from 'react-redux';
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,39 +69,80 @@ const ItemContent = styled.div`
   }
 `
 type Props = {
-  data: [{
-    category: 'expense' | 'income',
-    icon: string,
-    name: string,
-    createAt: string,
-    amount: number,
-  }][]
+  list: Array<RecordItem>
+}
+type NewRecordItem = {
+  tagId: number,
+  amount: number,
+  category: 'income'|'cost',
+  icon: string,
+  name: string,
+  time: string
 }
 
-const RecentRecord:React.FC<Props> = (props) => {
+type FormatRecordObject = {
+  [date: string]: Array<NewRecordItem>
+}
+
+type FormatRecordList = {
+  date: string,
+  list: Array<NewRecordItem>
+}[]
+
+const RecentRecord:React.FC<Props> = ({list}) => {
+  const tagList = useSelector((state:RootState) => state.tagList)
+  const formatList = useMemo(() => {
+    let formatObj: FormatRecordObject = {}
+    // 获取tag内容加入到record中
+    list.forEach((item) => {
+      const {tagId, category, amount, createAt } = item
+      let matchedTag = {icon: '', name: ''}
+      tagList.forEach(({name, id, icon}) => {
+        if(tagId === id) matchedTag = {icon, name}
+      })
+      const date = createAt.slice(0, 10)
+      const dateObj = dayjs(createAt)
+      const newItem: NewRecordItem  = { 
+        tagId, category, amount,
+        time: dateObj.format('HH:MM'),
+         ...matchedTag }
+      if (date in formatObj) {
+        formatObj[date].unshift(newItem)
+      } else {
+        formatObj[date] = [newItem]
+      }
+    })
+    // 组合date和新的recordItem列表
+    let formatList: FormatRecordList = []
+    for(let key in formatObj) {
+      formatList.push({date: dayjs(key).format('MM月DD日'), list: formatObj[key]})
+    }
+    return formatList
+  }, list)
+
   return (
     <Wrapper>
-      {props.data.map((item,index) => (
+      {formatList.map((item,index) => (
         <Record key={index}>
           <RecordHeader>
-            <div>11月16</div>
+            <div>{item.date}</div>
             <div>
               <span>
-                支出￥{item.reduce((t, v) => v.category === 'expense' ? v.amount + t : t, 0)}
+                支出￥{item.list.reduce((total, item) => item.category === 'cost' ? total.plus(item.amount) : total, new Decimal(0)).valueOf()}
               </span>
               <span>
-                收入￥{item.reduce((t, v) => v.category === 'income' ? v.amount + t : t, 0)}
+                收入￥{item.list.reduce((total, item) => item.category === 'income' ? total.plus(item.amount) : total, new Decimal(0)).valueOf()}
               </span>
             </div>
           </RecordHeader>
           <RecordContent>
             {
-              item.map((data,index) => (
+              item.list.map((record, index) => (
                 <li key={index}>
-                  <ItemIcon><Icon name="bag"/>{data.name}</ItemIcon>
+                  <ItemIcon><Icon name={record.icon}/>{record.name}</ItemIcon>
                   <ItemContent>
-                    <span>{data.category === 'income' ? '' : '-'}￥{data.amount}</span>
-                    <span>{data.createAt}</span>
+                    <span>{record.category === 'income' ? '' : '-'}￥{record.amount}</span>
+                    <span>{record.time}</span>
                   </ItemContent>
                 </li>
               ))

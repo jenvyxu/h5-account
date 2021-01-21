@@ -5,8 +5,11 @@ import {Header} from '../components/Header';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {RecentRecord} from './RecentRecord';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {getRecordList} from '../redux/reducers/recordSlice';
+import {RootState} from '../redux/store';
+import {RecordItem} from '../redux/reducers/recordSlice';
+import Decimal from 'decimal.js';
 
 const Total = styled.div`
   color: #9ecdc1;
@@ -57,36 +60,48 @@ const ShowRecordButton = styled.div`
     }
   }
 `
-
-const previewData = Array(7).fill(Array(5).fill({
-  category: 'expense', //expense | income
-  icon: 'bag',
-  name: '购物',
-  createAt: '12:19',
-  amount: 123
-}))
-
 const Home: React.FC = () => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
+  const current = new Date()
+  const timestamp = current.toISOString()
+  const recordList = useSelector((state: RootState) => state.record)
+  // 今天的记账信息
+  const todayRecordList = useSelector<RootState>(({record})=> {
+    const match = timestamp.slice(0, 10)
+    return record.reduce((arr, item) => {
+      if(item.createAt.includes(match)){
+        arr.push(item)
+      }
+      return arr
+    }, [] as Array<RecordItem>)
+  })
+  // 今天所有收入
+  const todayTotalIncome = (todayRecordList as Array<RecordItem>).reduce((total, item) =>
+    item.category === 'income' ? total.plus(item.amount) : total, new Decimal(0)).toNumber()
+  // 今天总支出
+  const todayTotalCost = (todayRecordList as Array<RecordItem>).reduce((total, item) =>
+    item.category === 'cost' ? total.plus(item.amount) : total, new Decimal(0)).toNumber()
+  // 获取最近三天的记账信息
   useEffect(() => {
-    dispatch(getRecordList({day: 6, timestamp: new Date().toISOString()}))
+    dispatch(getRecordList({day: 2, timestamp}))
   }, [])
+
   return (
     <Layout>
       <Header title="TODAY" />
       <Total>
         <span>今日支出</span>
-        <span>￥4081</span>
-        <span>收入￥1991</span>
+        <span>￥{todayTotalCost}</span>
+        <span>收入￥{todayTotalIncome}</span>
       </Total>
       <RecordButton>
         <Link to='/money'>记一笔</Link>
       </RecordButton>
-      <ShowRecordButton onClick={() =>setVisible(!visible)}>展示近七天账单
-        <Icon name="up" className={visible?'down':'up'}/>
+      <ShowRecordButton onClick={() =>setVisible(!visible)}>展示近三天账单
+        <Icon name="up" className={ visible ? 'down' : 'up' }/>
       </ShowRecordButton>
-      { visible && <RecentRecord data={ previewData }/>}
+      { visible && <RecentRecord list={recordList}/>}
     </Layout>
   )
 }
