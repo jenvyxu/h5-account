@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Layout from '../components/Layout';
 import Icon from '../components/Icon';
 import {Header} from '../components/Header';
@@ -69,19 +69,31 @@ const Home: React.FC = () => {
   // 今天的记账信息
   const todayRecordList = useSelector<RootState>(({record})=> {
     const match = timestamp.slice(0, 10)
-    return record.homeRecordList.reduce((arr, item) => {
-      if(item.createAt.includes(match)){
-        arr.push(item)
-      }
-      return arr
-    }, [] as Array<RecordItem>)
+    if(record.homeRecordList) {
+      return record.homeRecordList.reduce((arr, item) => {
+        if(item.createAt.includes(match)){
+          arr.push(item)
+        }
+        return arr
+      }, [] as Array<RecordItem>)      
+    } else {
+      return [] as Array<RecordItem>
+    }
+
   })
+
   // 今天所有收入
-  const todayTotalIncome = (todayRecordList as Array<RecordItem>).reduce((total, item) =>
-    item.category === 'income' ? total.plus(item.amount) : total, new Decimal(0)).toNumber()
+  const todayTotalIncome = useMemo(() => (todayRecordList as Array<RecordItem>).reduce((total, item) =>
+      item.category === 'income' ? 
+      total.plus(item.amount) : 
+      total, new Decimal(0)).toNumber(), [todayRecordList as Array<RecordItem>])
+
   // 今天总支出
-  const todayTotalCost = (todayRecordList as Array<RecordItem>).reduce((total, item) =>
-    item.category === 'cost' ? total.plus(item.amount) : total, new Decimal(0)).toNumber()
+  const todayTotalCost = useMemo(() => (todayRecordList as Array<RecordItem>).reduce((total, item) =>
+    item.category === 'cost' ?
+    total.plus(item.amount) : 
+    total, new Decimal(0)).toNumber(), [todayRecordList as Array<RecordItem>])
+
   // 获取最近三天的记账信息
   useEffect(() => {
     dispatch(getRecordList({day: 2, timestamp}))
