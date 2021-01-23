@@ -1,19 +1,9 @@
-import { number } from 'mathjs';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
-import {httpGetOverview} from '../../http';
+import {getOverviewRecordList, RecordItem, RecordList} from '../../redux/reducers/recordSlice';
 import {Decimal} from 'decimal.js';
-import message from '../../lib/message';
-
-
-type List = Array<{
-  amount: number
-  category: 'cost'|'income'
-  createAt: string
-  note: string
-  tagId: number
-  _id: string
-}>
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from 'redux/store';
 
 const echarts = require('echarts')
 const Wrapper = styled.div``
@@ -35,40 +25,44 @@ const ButtonWrapper = styled.div`
     background: #fff;
   }
 `
-
 const Overview: React.FC = () => {
-  const chartRef = useRef(null)
   // 每次获取多少天的数据
   const count = 7
   const [current] = useState(new Date())
   // 当前时间戳，用来生成同样的日期对象，作复制用
-  const currentTimestamp = current.toISOString()
-  // 当前索引位置，0表示今天到前count天
+  const timestamp = current.toISOString()
+  // 当前索引位置，0表示今天
   const [index, setIndex] = useState(0)
   // x轴数据
   const [xAxisData, setXaxisData] = useState<string[]>(['', '', '', '', '', '', ''])
   // y轴数据
   const [totalIncomeList, setTotalIncomeList] = useState<number[]>([])
   const [totalCostList, setTotalCostList] = useState<number[]>([])
-  // 加载数据
-  const [loading, setLoading] = useState(false)
-  // 挂载组件强求数据
+
+  // 获取overviewRecordList
+  const dispatch = useDispatch()
+  const loading = useSelector((state: RootState) => state.record.loading)
+  const overviewRecordList = useSelector((state: RootState) => state.record.overviewRecordList)
+  const chartRef = useRef(null)
   useEffect(() => {
-    getOverviewData(count, current.toISOString())
+    dispatch(getOverviewRecordList({timestamp, day: count - 1}))
   }, [])
   // loading改变重新渲染图表
   useEffect(() => {
-    initEchart()
+    const chart = echarts.init(chartRef.current)
+    if(loading) {
+      chart.showLoading()
+    } else {
+      const dateList = getDateList(overviewRecordList)
+      getMonenyList(dateList, overviewRecordList)
+      setXaxisData(dateList)
+      initChart(chart)
+      chart.hideLoading()
+    }
   }, [loading])
 
   // 初始化图表
-  const initEchart = () => {
-    const myChart = echarts.init(chartRef.current)
-    if(loading) {
-      myChart.showLoading()
-    } else {
-      myChart.hideLoading()
-    }
+  const initChart = (chart: any) => {
     const option = {
       legend: {
         data: ['收入', '支出'],
@@ -105,24 +99,12 @@ const Overview: React.FC = () => {
         data: totalIncomeList,
         type: 'line'
       }]
-    };
-    myChart.setOption(option);
-  }
-  // 根据当前时间和索引获取图表数据
-  const getOverviewData = async (count: number, timestamp: string) => {
-    try {
-      setLoading(true)
-      const { data: list } = await httpGetOverview({count, timestamp})
-      const dateList = getDateList(list)
-      getMonenyList(dateList, list)
-      setXaxisData(dateList)
-      setLoading(false)
-    } catch (e) {
-      setLoading(false)
     }
+    chart.setOption(option)
   }
+
   // 获取x轴日期列表
-  const getDateList = (list: List) => {
+  const getDateList = (list: RecordList) => {
     const currentCopy = new Date(current.toISOString())
     let dateList:Array<string> = []
     for (let i = 0; i < count; i++) {
@@ -134,7 +116,7 @@ const Overview: React.FC = () => {
     return dateList
   }
   // 获取y轴金钱列表
-  const getMonenyList = (dateList: string[], list: List) => {
+  const getMonenyList = (dateList: string[], list: RecordList) => {
     let dateObj:{[key: string]: {income: number[], cost: number[]}} = {}
     // 把每天的收入和支出分别加入两个不同的数组
     dateList.forEach((key) => {
@@ -165,22 +147,21 @@ const Overview: React.FC = () => {
     if(loading) return
     current.setDate(current.getDate() - count)
     setIndex(index - 1)
-    getOverviewData(count, current.toISOString())
+    dispatch(getOverviewRecordList({timestamp: current.toISOString(), day: count - 1}))
   }
   // 获取后count天数据
   const getNextData = () => {
     if(loading) return
     current.setDate(current.getDate() + count)
     setIndex(index + 1)
-    console.log(current.toISOString())
-    getOverviewData(count, current.toISOString())
+    dispatch(getOverviewRecordList({timestamp: current.toISOString(), day: count - 1}))
   }
   // 获取当前七天数据
   const getCurrentData = () => {
     if(loading) return
     current.setDate(current.getDate() - count * index)
     setIndex(0)
-    getOverviewData(count, current.toISOString())
+    dispatch(getOverviewRecordList({timestamp: current.toISOString(), day: count - 1}))
   }
 
   return (
