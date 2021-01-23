@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {RecentRecord} from './RecentRecord';
 import { useDispatch, useSelector } from 'react-redux';
-import {getRecordList} from '../redux/reducers/recordSlice';
+import {getHomeRecordList} from '../redux/reducers/recordSlice';
 import {RootState} from '../redux/store';
 import {RecordItem} from '../redux/reducers/recordSlice';
 import Decimal from 'decimal.js';
@@ -96,7 +96,7 @@ const Home: React.FC = () => {
 
   // 获取最近三天的记账信息
   useEffect(() => {
-    dispatch(getRecordList({day: 2, timestamp}))
+    dispatch(getHomeRecordList({day: 2, timestamp}))
   }, [])
 
   return (
