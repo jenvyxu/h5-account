@@ -2,9 +2,10 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
 import {RecordItem} from '../../redux/reducers/recordSlice';
-import {getRecordList} from '../../redux/reducers/recordSlice'
+import {getStatisticReacordList} from '../../redux/reducers/recordSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import {RootState} from '../../redux/store'
+import {Decimal} from 'decimal.js';
 
 const echarts = require('echarts')
 
@@ -88,8 +89,9 @@ const PieChart: React.FC<Props> = ({type, current}) => {
   const dispatch = useDispatch()
   const recordList = useSelector((state: RootState) => state.record.statisticReacordList)
   const tagList = useSelector((state: RootState) => state.tagList)
+  const loading = useSelector((state: RootState) => state.record.loading)
   useEffect(() => {
-    dispatch(getRecordList({month: 0, timestamp}))
+    dispatch(getStatisticReacordList({month: 0, timestamp}))
   }, [])
   
   // 根据type类型刷选出支出列表还是收入列表
@@ -100,12 +102,12 @@ const PieChart: React.FC<Props> = ({type, current}) => {
         [...newList, item] : 
         newList,
       [] as RecordItem[])
-  }, [type, recordList.length])
+  }, [type, recordList])
 
   // 当前分类的总金额
   const totalAmount = useMemo(() => {
-    return selectedRecordListByType.reduce((t, item) =>t + item.amount, 0)    
-  }, [type, recordList.length])
+    return selectedRecordListByType.reduce((t, item) => t.plus(item.amount), new Decimal(0)).toNumber()
+  }, [type, recordList])
   
   // 合计每一种标签的收入和支出的总和
   const filterList = useMemo(() => {
@@ -123,14 +125,21 @@ const PieChart: React.FC<Props> = ({type, current}) => {
       const percent = (total * 100 / totalAmount).toFixed(2) + '%'
       return { ...tagObj, total, percent }
     })
-  }, [type, recordList.length])
+  }, [type, recordList])
 
   // 绘制图表
   const chartRef = useRef(null)
   useEffect(() => {
-    initChart()
+    const chart = echarts.init(chartRef.current)
+    if(loading) {
+      chart.showLoading()
+    } else {
+      initChart(chart)
+      chart.hideLoading()
+    }
   })
-  const initChart = () => {
+
+  const initChart = (chart: any) => {
     const option = {
       tooltip: {
         trigger: 'item',
@@ -165,16 +174,15 @@ const PieChart: React.FC<Props> = ({type, current}) => {
           })),
         }
       ]
-    };
-    const chart = echarts.init(chartRef.current)
+    }
     chart.setOption(option)
   }
 
   return (
-    <div >
+    <div>
       <Title>
         <span className="label">{type === 'cost' ? '共支出' : '共收入'}</span>
-        <span className="total">￥{selectedRecordListByType.reduce((t, item) =>t + item.amount, 0)}</span>
+        <span className="total">￥{totalAmount}</span>
         <span className="count">共{selectedRecordListByType.length}条{ type==='cost' ? '支出' : '收入' }目录</span>
       </Title>
       <Chart ref={chartRef} />
@@ -192,7 +200,7 @@ const PieChart: React.FC<Props> = ({type, current}) => {
               </Bar>
             </BarWrapper>
             <NumberWrapper>{item.percent}</NumberWrapper>
-          </Item>          
+          </Item>
         ))}
       </ItemWrapper>
     </div>
