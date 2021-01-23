@@ -10,41 +10,66 @@ export type RecordItem = {
   createAt: string;
   _id?: string
 }
-export type NewRecordItem = Omit<RecordItem, 'createAt'>
-
+export type RecordList = Array<RecordItem>
 type RecordArgs =  {
   day?: number,
   month?: number, 
   timestamp: string
 }
 
-export const getRecordList = createAsyncThunk<void, RecordArgs, { state: RootState }>(
-  'record/getRecordList',
-  async (obj, { rejectWithValue, dispatch }) => {
+interface IntialState<T> {
+  homeRecordList: Array<T>,
+  statisticReacordList: Array<T>,
+  overviewRecordList: Array<T>,
+  loading: boolean
+}
+// 获取首页统计列表
+export const getHomeRecordList = createAsyncThunk<RecordList,
+  Omit<RecordArgs, "month">,
+  { state: RootState }>(
+  'record/getHomeRecordList',
+  async (obj, { rejectWithValue }) => {
     try {
-      if(obj.month === undefined) {
-        const list = await httpGetRecordList(obj)
-        dispatch({type: 'record/getRecordListByDay', payload: list})
-      } else {
-        const list = await httpGetRecordList(obj)
-        dispatch({type: 'record/getRecordListByMonth', payload: list})
-      }
+      return await httpGetRecordList(obj)
+    } catch (err) {
+      return rejectWithValue(err)
+    }
+  }
+)
+// 获取统计概览组件列表
+export const getOverviewRecordList = createAsyncThunk<RecordList, 
+  Omit<RecordArgs, "month">, 
+  { state: RootState }>(
+  'record/getOverviewRecordList',
+  async (obj, { rejectWithValue }) => {
+    try {
+      return await httpGetRecordList(obj)
+    } catch (err) {
+      return rejectWithValue(err)
+    }
+  }
+)
+// 获取收入支出统计组件列表
+export const getStatisticReacordList = createAsyncThunk<RecordList,
+  Omit<RecordArgs, "day">,
+  { state: RootState }>(
+  'record/getStatisticReacordList',
+  async (obj, { rejectWithValue }) => {
+    try {
+      return await httpGetRecordList(obj)
     } catch (err) {
       return rejectWithValue(err)
     }
   }
 )
 
-interface IntialState<T> {
-  homeRecordList: Array<T>,
-  statisticReacordList: Array<T>
-}
-
 const record = createSlice({
   name: 'record',
   initialState: {
     homeRecordList: [],
-    statisticReacordList: []
+    statisticReacordList: [],
+    overviewRecordList: [],
+    loading: false
   } as IntialState<RecordItem>,
   reducers:{
     addRecord: (state, action) => {
@@ -53,20 +78,34 @@ const record = createSlice({
     removeRecord: (state, action) => {
       state = action.payload
     },
-    getRecordListByDay: (state, action) => {
-      state.homeRecordList = action.payload
-    },
-    getRecordListByMonth: (state, action) => {
-      state.statisticReacordList = action.payload
-    }
   },
-  // extraReducers: builder => {
-  //   builder.addCase(getRecordList.fulfilled, (state, action) => {
-     
-  //   })
-  // }
+  extraReducers: builder => {
+    // 获取统计概览组件列表
+    builder.addCase(getOverviewRecordList.pending, (state, action) => {
+      state.loading = true
+    })
+    builder.addCase(getOverviewRecordList.fulfilled, (state, action) => {
+      state.overviewRecordList = action.payload
+      state.loading = false
+    })
+    // 获取收入支出统计列表
+    builder.addCase(getStatisticReacordList.pending, (state, action) => {
+      state.loading = true
+    })
+    builder.addCase(getStatisticReacordList.fulfilled, (state, action) => {
+      state.statisticReacordList = action.payload
+      state.loading = false
+    })
+    // 获取首页统计列表
+    builder.addCase(getHomeRecordList.pending, (state, action) => {
+      state.loading = true
+    })
+    builder.addCase(getHomeRecordList.fulfilled, (state, action) => {
+      state.homeRecordList = action.payload
+      state.loading = false
+    })
+  }
 })
-
 
 export const { addRecord, removeRecord } = record.actions
 export default record.reducer
