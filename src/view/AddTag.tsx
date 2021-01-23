@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {RootState} from '../redux/store';
 import {tagsCategoryList} from '../constant';
 import {asyncAddTag} from '../redux/reducers/tagSlice';
+import message from 'lib/message';
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -115,25 +116,36 @@ const AddTag: React.FC = () => {
   // 收入或支出
   const category = useSelector((state:RootState) => state.category)
   const dispatch = useDispatch()
-
+  // 提交标签信息
   const onConfirm = async () => {
     if(!tagName || !selectedTagIcon) return
-    const result = await dispatch(asyncAddTag({ name: tagName, icon: selectedTagIcon, category}))
-    if(asyncAddTag.fulfilled.match(result as any)) {
-      goBack()
+    if(tagName.length > 2) {
+      return message.warning('标签字数不能超过2个')
+    }
+    try {
+      await dispatch(asyncAddTag({
+        name: tagName,
+        icon: selectedTagIcon,
+        category}))
+      goBack()      
+    } catch (e) {
+
     }
   }
+
   return (
     <Wrapper>
-      <Header title="新增标签"
-              left={<Icon name="back" onClick={goBack} />}
-              right={<Icon name="confirm" onClick={onConfirm} />}
+      <Header
+        title="新增标签"
+        left={<Icon name="back" onClick={goBack} />}
+        right={<Icon name="confirm" onClick={onConfirm} />}
       />
       <InputWrapper>
         <span><Icon name={selectedTagIcon} /></span>
-        <Input label='' placeholder="填写标签名" onChange={
-          (e) => {setTagName(e.target.value)}
-        }/>
+        <Input
+          label='' 
+          placeholder="填写标签名" 
+          onChange={(e) => {setTagName(e.target.value)}} />
       </InputWrapper>
       <IconWrapper>
         {
