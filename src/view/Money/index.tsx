@@ -8,10 +8,8 @@ import {NumberPadSection} from './NumberPadSection';
 import {TagsSection} from './TagsSection';
 import {Header} from '../../components/Header';
 import {useSelector} from 'react-redux';
-import {Category} from '../../redux/types/categoryTypes';
 import {RootState} from '../../redux/store';
 import message from '../../lib/message';
-import {Tag} from '../../redux/types/tagTypes'
 
 const HeaderSection = styled(Header)`
   .title {
@@ -30,29 +28,22 @@ const HeaderSection = styled(Header)`
 type FormData = {
   tagId: number,
   note: string,
-  category: Category,
   amount: number
 }
-
+// 最小的tagId是0
 const initialFormData: FormData = {
-  tagId: 0,
+  tagId: -1,
   note: '',
-  category: 'cost',
   amount: 0
 }
 
 const Money: React.FC = () => {
-  const [formData, setFormData] = useState({
-    tagId: 0,
-    note: '',
-    amount: 0
-  })
+  const [formData, setFormData] = useState(initialFormData)
   const tagList = useSelector((state: RootState )=> state.tagList)
   const category = useSelector((state: RootState) => state.category)
 
   const {addRecord} = useRecords()
   type Selected = typeof formData
-
   const onChange = (obj: Partial<Selected>) => {
     setFormData({
       ...formData,
@@ -70,12 +61,17 @@ const Money: React.FC = () => {
         message.warning('请选择标签')
         return Promise.reject()
       case 'complete':
-        message.warning('记账成功')
-        setFormData(initialFormData);
+        message.success('记账成功')
+        resetFormData()
         return Promise.resolve()
       default:
         return Promise.reject()
     }
+  }
+  // 重置表单数据
+  const resetFormData = () => {
+    console.log('reset')
+    setFormData({...initialFormData, tagId: -1})
   }
 
   return (
