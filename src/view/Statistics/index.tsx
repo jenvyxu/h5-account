@@ -1,13 +1,11 @@
 import Layout from 'components/Layout';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
-import {RecordItem, useRecords} from 'hooks/useRecords';
 import day from 'dayjs'
 import {Header} from '../../components/Header';
 import Icon from '../../components/Icon';
 import {Overview} from './Overview';
 import {PieChart} from './PieChart';
-// import {httpGetStatistic} from '../../http';
 
 const TabHeader = styled.ul`
   display: flex;
@@ -73,25 +71,6 @@ type TabType = 'overview' | 'cost' | 'income'
 const Statistics = () => {
   const [selected, setSelected] = useState<TabType>('overview')
   const [current, setCurrent] = useState(new Date())
-
-
-
-  // 获取月度支出统计
-  // const getMonthlyIncomeStatistic = (type: 'income'|'cost') => {
-  //   const dateString = new Date().toISOString().slice(0, 7) // 2020-12
-  //   const today = new Date(dateString)
-  //   const start = today.toISOString()
-  //   today.setMonth(today.getMonth() + 1)
-  //   const end = today.toISOString()
-  //   httpGetStatistic({start, end, type}).then(({data})=> {
-  //     if(type === 'income') {
-  //       setIncomeList(data)
-  //     } else {
-  //       setCostList(data)
-  //     }
-  //   })
-  // }
-
   return (
     <Layout>
       <Header title={day(current).format('YYYY年MM月')} />
