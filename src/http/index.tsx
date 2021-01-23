@@ -1,30 +1,26 @@
-import axios from 'axios';
-import client from './client'
+import client from './client';
 import { TagList, Tag } from 'redux/types/tagTypes';
-
-// 使用unicloud空间
-const host = 'https://fd9b10f6-6863-4898-962b-cdd165d2cdfb.bspapp.com'
 
 // 新增标签
 const httpAddTag = async (
     data: Tag
   ): Promise<TagList> => {
-  const { data: {tagList} } = await axios.post(host + '/http/tag/add', data)
-  return tagList
+  try {
+    const { data: { tagList } } = await client.post('/http/tag/add', data)
+    return tagList
+  } catch(e) {
+    return Promise.reject(e)
+  }
 }
 
 // 获取标签列表
 const httpGetTag = async (): Promise<{tagList: TagList, success: boolean}> => {
-  const {data: res} = await axios.get(host + '/http/tag/getTagList')
-  return res
-}
-
-const deleteTag = () => {
-
-}
-
-const updateTag = () => {
-
+  try {
+    const { data: list } = await client.get('/http/tag/getTagList')
+    return list    
+  } catch(e) {
+    return Promise.reject(e)
+  }
 }
 
 const httpAddRecord = async (action: string, data: {
@@ -34,23 +30,11 @@ const httpAddRecord = async (action: string, data: {
   createAt: string,
   note: string
 }) => {
-  return await axios.post(host + '/http/record/' + action, data)
-}
-
-const httpGetOverview = async (data: {
-    count: number,
-    timestamp: string
-  }) => {
-  const { data: list } = await client.post('/http/statistic/overview', data)
-  return list
-}
-
-const httpGetStatisticMonthly = async (data: {
-    time: string
-    type: 'income'|'cost'
-  }) => {
-  const { data: list } = await axios.post(host + '/http/statistic/monthly', data)
-  return list
+  try {
+    return await client.post('/http/record/' + action, data)
+  } catch (e) {
+    return Promise.reject(e)
+  }
 }
 
 /**
@@ -82,12 +66,8 @@ const httpGetRecordList = async (data: {timestamp: string, day?: number, month?:
 }
 
 export { 
-  httpAddTag, 
-  httpGetTag, 
-  deleteTag,
-  updateTag, 
-  httpAddRecord, 
-  httpGetOverview,
-  httpGetStatisticMonthly,
+  httpAddTag,
+  httpGetTag,
+  httpAddRecord,
   httpGetRecordList
 }
