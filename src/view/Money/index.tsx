@@ -64,8 +64,8 @@ const Money: React.FC = () => {
             message.warning('请选择标签')
             return Promise.reject()
           case 'complete':
-            resetFormData()
             message.success('记账成功')
+            resetFormData()
             return Promise.resolve()
           default:
             return Promise.reject()
