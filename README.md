@@ -29,10 +29,6 @@
 <img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/link.png" alt="收入统计" width="160">
 
 ## App截图
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/home.png" alt="首页" width="240">
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/money.png" alt="记账页" width="240">
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/tag.png" alt="标签页" width="240">
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/overview.png" alt="概览图" width="240">
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/cost.png" alt="支出统计" width="240">
-<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/income.png" alt="收入统计" width="240">
+<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/home.png" alt="首页" width="240"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/money.png" alt="记账页" width="240"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/tag.png" alt="标签页" width="240">
+<img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/overview.png" alt="概览图" width="240"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/cost.png" alt="支出统计" width="240"><img src="https://github.com/jenvyxu/save-my-money/blob/master/readme/income.png" alt="收入统计" width="240">
 
