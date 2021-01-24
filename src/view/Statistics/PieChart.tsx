@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
 import {RecordItem} from '../../redux/reducers/recordSlice';

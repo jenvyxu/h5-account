@@ -67,10 +67,11 @@ const Home: React.FC = () => {
   const timestamp = current.toISOString()
   const recordList = useSelector((state: RootState) => state.record.homeRecordList)
   // 今天的记账信息
-  const todayRecordList = useSelector<RootState>(({record})=> {
+  const todayRecordList = useSelector((state: RootState)=> {
+    const homeRecordList = state.record.homeRecordList
     const match = timestamp.slice(0, 10)
-    if(record.homeRecordList) {
-      return record.homeRecordList.reduce((arr, item) => {
+    if(homeRecordList) {
+      return homeRecordList.reduce((arr, item) => {
         if(item.createAt.includes(match)){
           arr.push(item)
         }
@@ -79,20 +80,19 @@ const Home: React.FC = () => {
     } else {
       return [] as Array<RecordItem>
     }
-
   })
 
   // 今天所有收入
-  const todayTotalIncome = useMemo(() => (todayRecordList as Array<RecordItem>).reduce((total, item) =>
+  const todayTotalIncome = useMemo(() => (todayRecordList).reduce((total, item) =>
       item.category === 'income' ? 
       total.plus(item.amount) : 
-      total, new Decimal(0)).toNumber(), [todayRecordList as Array<RecordItem>])
+      total, new Decimal(0)).toNumber(), [todayRecordList])
 
   // 今天总支出
-  const todayTotalCost = useMemo(() => (todayRecordList as Array<RecordItem>).reduce((total, item) =>
+  const todayTotalCost = useMemo(() => (todayRecordList).reduce((total, item) =>
     item.category === 'cost' ?
     total.plus(item.amount) : 
-    total, new Decimal(0)).toNumber(), [todayRecordList as Array<RecordItem>])
+    total, new Decimal(0)).toNumber(), [todayRecordList])
 
   // 获取最近三天的记账信息
   useEffect(() => {

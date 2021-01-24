@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
-import {getOverviewRecordList, RecordItem, RecordList} from '../../redux/reducers/recordSlice';
+import {getOverviewRecordList, RecordList} from '../../redux/reducers/recordSlice';
 import {Decimal} from 'decimal.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from 'redux/store';

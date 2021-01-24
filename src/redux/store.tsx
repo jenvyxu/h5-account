@@ -1,4 +1,4 @@
-import { combineReducers, configureStore, getDefaultMiddleware  } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import tagReducer, {fetchTagList} from './reducers/tagSlice';
 import categoryReducer from './reducers/categorySlice';
 import recordReducer from './reducers/recordSlice';

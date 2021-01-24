@@ -38,18 +38,17 @@ const TagList = styled.ol`
     }
   }
 `
-const Label = styled.span`
-  display: flex;
-  align-items: center;
-  >.icon {
-    width: 28px;
-    height: 28px;
-    margin-right: 8px;
-  }
-`
+// const Label = styled.span`
+//   display: flex;
+//   align-items: center;
+//   >.icon {
+//     width: 28px;
+//     height: 28px;
+//     margin-right: 8px;
+//   }
+// `
 
 const Tags = () => {
-  // const {tags} = useTags()
   const location= useLocation()
   console.log('location', location)
   return (

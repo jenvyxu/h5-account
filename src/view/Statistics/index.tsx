@@ -70,7 +70,7 @@ type TabType = 'overview' | 'cost' | 'income'
 
 const Statistics = () => {
   const [selected, setSelected] = useState<TabType>('overview')
-  const [current, setCurrent] = useState(new Date())
+  const [current] = useState(new Date())
   return (
     <Layout>
       <Header title={day(current).format('YYYY年MM月')} />

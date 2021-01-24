@@ -49,7 +49,7 @@ const NumberPadSection: React.FC<Props> = ({saveRecord, onChange, value}) => {
         <button>.</button>
         <button className="btn-zero">0</button>
         <button>{CONSTANTS.clear}</button>
-        <button className="btn-complete">{/^\-?\d+\.?\d*$/.test(output)  ? CONSTANTS.complete : '='}</button>
+        <button className="btn-complete">{/^-?\d+\.?\d*$/.test(output) ? CONSTANTS.complete : '='}</button>
       </div>
     </Wrapper>
   )
