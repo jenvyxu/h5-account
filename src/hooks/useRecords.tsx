@@ -26,7 +26,7 @@ const useRecords = () => {
     if(newRecord.amount <= 0 ){
       return 'requireMoney'
     }
-    if(newRecord.tagId <= 0) {
+    if(newRecord.tagId < 0) {
       return 'requireTag'
     }
     const record = {...newRecord, createAt: (new Date()).toISOString()}

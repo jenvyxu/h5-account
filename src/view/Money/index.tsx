@@ -70,7 +70,6 @@ const Money: React.FC = () => {
   }
   // 重置表单数据
   const resetFormData = () => {
-    console.log('reset')
     setFormData({...initialFormData, tagId: -1})
   }
 

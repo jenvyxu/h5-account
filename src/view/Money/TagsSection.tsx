@@ -87,10 +87,7 @@ const TagsSection: React.FC<Props> = ({value, category, onChange, tagList}) => {
             <Icon name={tag.icon}/><span>{tag.name}</span></li>
         )}
         <li>
-          <Link to={{
-            pathname: '/tags/add',
-            state: category || 'cost'
-          }}>
+          <Link to='/tags/add'>
           <Icon name="add"/></Link>
         </li>
       </ol>
