@@ -10,7 +10,6 @@ import Statistics from 'view/Statistics';
 import Tags from 'view/Tags';
 import NoMatch from 'view/NoMatch';
 import styled from 'styled-components';
-import {Tag} from './view/Tag';
 import AddTag from './view/AddTag';
 import {Home} from './view/Home';
 
@@ -37,9 +36,6 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/tags/add">
             <AddTag />
-          </Route>
-          <Route exact path="/tags/:id">
-            <Tag />
           </Route>
           <Route exact path="/">
             <Redirect to='/home' />

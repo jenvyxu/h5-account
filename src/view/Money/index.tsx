@@ -1,5 +1,4 @@
 import Layout from 'components/Layout';
-import { useRecords } from 'hooks/useRecords';
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import CategorySection from './CategorySection';
@@ -10,6 +9,9 @@ import {Header} from '../../components/Header';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../redux/store';
 import message from '../../lib/message';
+import {addRecord} from '../../redux/reducers/recordSlice';
+import {useAppDispatch} from '../../redux/store';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const HeaderSection = styled(Header)`
   .title {
@@ -41,8 +43,7 @@ const Money: React.FC = () => {
   const [formData, setFormData] = useState(initialFormData)
   const tagList = useSelector((state: RootState )=> state.tagList)
   const category = useSelector((state: RootState) => state.category)
-
-  const {addRecord} = useRecords()
+  const dispatch = useAppDispatch()
   type Selected = typeof formData
   const onChange = (obj: Partial<Selected>) => {
     setFormData({
@@ -52,21 +53,27 @@ const Money: React.FC = () => {
   }
   // 保存记账信息
   const saveRecord = async (): Promise<any> => {
-    const res = await addRecord({...formData, category})
-    switch (res) {
-      case 'requireMoney':
-        message.warning('请输入金额')
-        return Promise.reject()
-      case 'requireTag':
-        message.warning('请选择标签')
-        return Promise.reject()
-      case 'complete':
-        message.success('记账成功')
-        resetFormData()
-        return Promise.resolve()
-      default:
-        return Promise.reject()
-    }
+      dispatch(addRecord({...formData, category}))
+      .then(unwrapResult)
+      .then((res) => {
+        switch (res) {
+          case 'requireMoney':
+            message.warning('请输入金额')
+            return Promise.reject()
+          case 'requireTag':
+            message.warning('请选择标签')
+            return Promise.reject()
+          case 'complete':
+            resetFormData()
+            message.success('记账成功')
+            return Promise.resolve()
+          default:
+            return Promise.reject()
+        }
+      }).catch((e) => {
+        console.log(e)
+        return Promise.reject(e)
+      })
   }
   // 重置表单数据
   const resetFormData = () => {

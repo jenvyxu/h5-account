@@ -1,6 +1,5 @@
 import Layout from 'components/Layout';
 import React from 'react';
-import {useTags} from 'hooks/useTags';
 import styled from 'styled-components';
 import Icon from 'components/Icon';
 import {Link, useLocation} from 'react-router-dom';
@@ -50,19 +49,19 @@ const Label = styled.span`
 `
 
 const Tags = () => {
-  const {tags} = useTags()
+  // const {tags} = useTags()
   const location= useLocation()
   console.log('location', location)
   return (
     <TagsLayout>
       <Header title="标签管理" />
       <TagList>
-        {tags.map(tag => <li key={tag.id}>
+        {/* {tags.map(tag => <li key={tag.id}>
           <Link to={'/tags/' + tag.id}>
             <Label><Icon name={tag.icon} /><span>{tag.name}</span></Label>
             <Icon name="right"/>
           </Link>
-        </li>)}
+        </li>)} */}
       </TagList>
       <Link to='tags/add'><Icon name="add" /></Link>
     </TagsLayout>
