@@ -33,12 +33,6 @@ const Overview: React.FC = () => {
   const timestamp = current.toISOString()
   // 当前索引位置，0表示今天
   const [index, setIndex] = useState(0)
-  // x轴数据
-  const [xAxisData, setXaxisData] = useState<string[]>(['', '', '', '', '', '', ''])
-  // y轴数据
-  const [totalIncomeList, setTotalIncomeList] = useState<number[]>([])
-  const [totalCostList, setTotalCostList] = useState<number[]>([])
-
   // 获取overviewRecordList
   const dispatch = useDispatch()
   const loading = useSelector((state: RootState) => state.record.loading)
@@ -47,6 +41,7 @@ const Overview: React.FC = () => {
   useEffect(() => {
     dispatch(getOverviewRecordList({timestamp, day: count - 1}))
   }, [])
+
   // loading改变重新渲染图表
   useEffect(() => {
     const chart = echarts.init(chartRef.current)
@@ -54,15 +49,17 @@ const Overview: React.FC = () => {
       chart.showLoading()
     } else {
       const dateList = getDateList(overviewRecordList)
-      getMonenyList(dateList, overviewRecordList)
-      setXaxisData(dateList)
-      initChart(chart)
+      const { incomeList, costList } = getMonenyList(dateList, overviewRecordList)
+      initChart(chart, { incomeList, costList, dateList })
       chart.hideLoading()
     }
-  }, [loading])
+  })
 
   // 初始化图表
-  const initChart = (chart: any) => {
+  const initChart = (
+    chart: any, 
+    { incomeList, costList, dateList }: 
+    { incomeList:number[],costList: number[], dateList: string[]}) => {
     const option = {
       legend: {
         data: ['收入', '支出'],
@@ -75,7 +72,7 @@ const Overview: React.FC = () => {
       xAxis: {
         name: '',
         type: 'category',
-        data: xAxisData,
+        data: dateList,
         axisLabel: {
           inside: false,
           rotate: 45
@@ -91,12 +88,12 @@ const Overview: React.FC = () => {
       },
       series: [{
         name:'支出',
-        data: totalCostList,
+        data: costList,
         type: 'line'
       },
       {
         name: '收入',
-        data: totalIncomeList,
+        data: incomeList,
         type: 'line'
       }]
     }
@@ -139,8 +136,9 @@ const Overview: React.FC = () => {
       incomeList.push(totalIncome.toNumber())
       costList.push(totalCost.toNumber())
     }
-    setTotalCostList(costList)
-    setTotalIncomeList(incomeList)
+    // setTotalCostList(costList)
+    // setTotalIncomeList(incomeList)
+    return { incomeList, costList }
   }
   // 获取前count天数据
   const getPrevData = () => {
