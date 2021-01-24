@@ -88,6 +88,9 @@ const record = createSlice({
       state.overviewRecordList = action.payload
       state.loading = false
     })
+    builder.addCase(getOverviewRecordList.rejected, (state, action) => {
+      state.loading = false
+    })
     // 获取收入支出统计列表
     builder.addCase(getStatisticReacordList.pending, (state, action) => {
       state.loading = true
@@ -96,12 +99,18 @@ const record = createSlice({
       state.statisticReacordList = action.payload
       state.loading = false
     })
+    builder.addCase(getStatisticReacordList.rejected, (state, action) => {
+      state.loading = false
+    })
     // 获取首页统计列表
     builder.addCase(getHomeRecordList.pending, (state, action) => {
       state.loading = true
     })
     builder.addCase(getHomeRecordList.fulfilled, (state, action) => {
       state.homeRecordList = action.payload
+      state.loading = false
+    })
+    builder.addCase(getHomeRecordList.rejected, (state, action) => {
       state.loading = false
     })
   }

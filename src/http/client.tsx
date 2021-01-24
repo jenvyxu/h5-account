@@ -17,7 +17,6 @@ client.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   message.error('网络出问题了')
-  console.log(error)
   return Promise.reject(error);
 });
 

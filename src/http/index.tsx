@@ -61,7 +61,7 @@ const httpGetRecordList = async (data: {timestamp: string, day?: number, month?:
       return Promise.reject(message)
     }
   } catch(e) {
-    Promise.reject(e)
+    return Promise.reject(e)
   }
 }
 
