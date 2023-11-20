@@ -1,6 +1,7 @@
 # React H5在线记账
 ![](https://img.shields.io/badge/license-MIT-brightgreen)
 ![](https://img.shields.io/badge/npm-17.0.1-brightgreen)
+> 本地调试需要使用v16版本的nodejs
 ## 技术栈
 - React
 - React-redux
